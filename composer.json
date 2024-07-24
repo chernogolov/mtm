@@ -8,7 +8,7 @@
             "email": "achernogolov@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
         "intervention/image-laravel": "^1.2",
         "irazasyed/telegram-bot-sdk": "^3.14",
