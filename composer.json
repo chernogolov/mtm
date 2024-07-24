@@ -22,5 +22,12 @@
         "psr-4": {
             "Chernogolov\\Mtm\\": "src/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Chernogolov\\Mtm\\ServiceProvider"
+            ]
+        }
     }
 }
