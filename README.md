@@ -3,7 +3,7 @@ MultiTool Manager - Laravel admin panel
 
 #Installation
 
-composer require achernogolov/mtm
+composer require chernogolov/mtm
 
 #Usage
 
