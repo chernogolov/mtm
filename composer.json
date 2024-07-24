@@ -13,9 +13,7 @@
         "intervention/image-laravel": "^1.2",
         "irazasyed/telegram-bot-sdk": "^3.14",
         "laravel/framework": "^11.0",
-        "laravel/tinker": "^2.9",
         "maatwebsite/excel": "^3.1",
-        "movemoveapp/laravel-dadata": "^1.0",
         "phpoffice/phpword": "^1.2",
         "tonysm/rich-text-laravel": "^3.1"
     },
