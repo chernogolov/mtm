@@ -3,7 +3,8 @@ MultiTool Manager - Laravel admin panel
 
 #Installation
 
-composer require chernogolov/mtm
+1. Install and setup Laravel Breeze
+2. composer require chernogolov/mtm
 
 #Usage
 
