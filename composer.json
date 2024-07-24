@@ -1,0 +1,28 @@
+{
+    "name": "chernogolov/mtm",
+    "description": "MultiTool Admin panel for Laravel",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Anton Chernogolov",
+            "email": "achernogolov@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "intervention/image-laravel": "^1.2",
+        "irazasyed/telegram-bot-sdk": "^3.14",
+        "laravel/framework": "^11.0",
+        "laravel/tinker": "^2.9",
+        "maatwebsite/excel": "^3.1",
+        "movemoveapp/laravel-dadata": "^1.0",
+        "phpoffice/phpword": "^1.2",
+        "tonysm/rich-text-laravel": "^3.1"
+    },
+    "version": "0.0.1",
+    "autoload": {
+        "psr-4": {
+            "Chernogolov\\Mtm\\": "src/"
+        }
+    }
+}
