@@ -10,8 +10,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     public function boot()
     {
-        dd('sdsd');
-
         $this->publishes([
             __DIR__.'/../config/mtm.php' => config_path('mtm.php'),
         ]);
