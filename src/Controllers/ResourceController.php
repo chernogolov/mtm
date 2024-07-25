@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Schema;
 
 
 class ResourceController extends \App\Http\Controllers\Controller
@@ -68,7 +69,7 @@ class ResourceController extends \App\Http\Controllers\Controller
 
         $fields = Schema::getColumnListing(Str::plural(Str::lower($post_data['name'])));
 
-        return view('resource.create', ['fields' => $fields, 'name' => $post_data['name']]);
+        return view('mtm::resource.create', ['fields' => $fields, 'name' => $post_data['name']]);
     }
 
     /**
@@ -85,7 +86,7 @@ class ResourceController extends \App\Http\Controllers\Controller
 
         Resource::create($data);
 
-        return redirect()->route('resources.index')->with('success', $this->resource['one_name'] . __(' created successfully.'));
+        return redirect()->route('mtm::resources.index')->with('success', $this->resource['one_name'] . __(' created successfully.'));
     }
 
     /**
@@ -104,7 +105,7 @@ class ResourceController extends \App\Http\Controllers\Controller
         //
         $resource = Resource::where('id', $id)->first();
         $fields = Schema::getColumnListing(Str::plural(Str::lower($resource->model_name)));
-        return view('resource.edit', compact('resource', 'fields'));
+        return view('mtm::resource.edit', compact('resource', 'fields'));
     }
 
     /**
@@ -171,7 +172,7 @@ class ResourceController extends \App\Http\Controllers\Controller
     public function destroy($id)
     {
         $resource = Resource::find($id)->delete();
-        return redirect()->route('resources.index')->with('status', 'Resource Delete Successfully');
+        return redirect()->route('mtm::resources.index')->with('status', 'Resource Delete Successfully');
     }
 
 
@@ -207,6 +208,6 @@ class ResourceController extends \App\Http\Controllers\Controller
         $c_name = 'App\Models\\' . $resource->model_name;
         $c_name::query()->delete();
 
-        return redirect(route('resources.edit', ['resource' => $id]));
+        return redirect(route('mtm::resources.edit', ['resource' => $id]));
     }
 }

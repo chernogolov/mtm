@@ -19,13 +19,18 @@ use Illuminate\Support\Str;
 class CrudBaseController extends \App\Http\Controllers\Controller
 {
     public $resource = [];
-    public $m_name;
-    public $c_name;
+    public $modelName;
+    public $className;
 
     public function __construct()
     {
-        $this->resource = Resource::where('model_name', $this->m_name)->first();
-        $this->c_name = 'App\Models\\' . $this->m_name;
+        /** Get resource data from database */
+        $this->resource = Resource::where('model_name', $this->modelName)->first();
+
+        /** Generate model name */
+        $this->className = 'Chernogolov\Mtm\Models\\' . $this->modelName;
+
+        /** Set resource settings from string */
         $this->resource['editable_fields'] = explode(',', $this->resource['editable_fields']);
         $this->resource['catalog_fields'] = explode(',', $this->resource['catalog_fields']);
         $this->resource['view_fields'] = explode(',', $this->resource['view_fields']);
@@ -33,73 +38,71 @@ class CrudBaseController extends \App\Http\Controllers\Controller
         $orm_fields = [];
         $fields = $this->resource->fields;
         foreach ($this->resource['catalog_fields'] as $f)
-            if($fields->$f->type == 'orm')
+            if ($fields->$f->type == 'orm')
                 $orm_fields[] = $f;
 
         $this->resource['orm_fields'] = $orm_fields;
+
+        /** Delete unused fields */
         unset($fields->id);
         unset($fields->created_at);
         unset($fields->updated_at);
         $this->resource->fields = $fields;
+
         View::share('res', $this->resource);
         View::share('fields', $fields);
     }
+
     /**
      * Display a listing of the resource.
+     * @return View
+     * @var $on_pages - items on page
+     * @var $items - data intems with pagination
+     * @var Resource $resource
      */
     public function index(Request $request)
     {
-        //
         $resource = $this->resource;
-        $post_data = $request->all();
+        $itm = $this->className::latest();
 
-        /* items on page */
-        if(isset($post_data['on_pages']))
+        /** items on page from session */
+        if (isset($post_data['on_pages']))
             session(['on_pages' => $post_data['on_pages']]);
-        $on_pages = $request->session()->get('on_pages', 10);
 
-        if(isset($post_data['delete']) && !empty($post_data['delete']))
-        {
-            foreach ($post_data['delete'] as $id => $item) {
-                $d = $this->c_name::find($id);
-                if($d)
-                    $d->delete();
-            }
-        }
-        if(isset($post_data['excel']))
-        {
-            $exp_name = 'App\Exports\\' . Str::plural($this->m_name) . 'Export';
-            $data = $this->c_name::get();
-//            return view('crud_base.export', [
-//                'res' => $this->resource,
-//                'data' => $data
-//            ]);
-            return Excel::download(new BaseExport($this->resource['view_prefix'], $resource, $data), strtolower(Str::plural($this->m_name)) . '-' . date('Y-m-d') . '.xlsx');
-        }
-
-        $itm = $this->c_name::latest();
-
-        if(count($this->resource['orm_fields'])>0)
+        /** Add related data in resource */
+        if (count($this->resource['orm_fields']) > 0)
             foreach ($this->resource['orm_fields'] as $of)
                 $itm->with($of);
 
+        /** Delete items */
+        if (isset($request['delete_selected'])) {
+            foreach ($request['delete'] as $id => $item) {
+                $d = $this->className::find($id);
+                if ($d)
+                    $d->delete();
+            }
+        }
 
-        $items = $itm->paginate(200);
+        $on_pages = $request->session()->get('on_pages', 10);
+        $items = $itm->paginate($on_pages);
 
+        $view = 'mtm::' . $this->resource['view_prefix'] . '.index';
+        if(!view()->exists($view)){
+            $view = 'mtm::crud_base.index';
+        }
 
-        return view($this->resource['view_prefix'] . '.index', compact('items', 'resource', 'on_pages'));
+        return view($view, compact('items', 'resource', 'on_pages'));
     }
 
     /**
      * Show the form for creating a new resource.
+     * @return View
      */
     public function create()
     {
-        //
         $fields = collect([]);
-        foreach ($this->resource['editable_fields'] as $f)
-        {
-            if(isset($this->resource['fields']->$f))
+        foreach ($this->resource['editable_fields'] as $f) {
+            if (isset($this->resource['fields']->$f))
                 $fields->put($f, $this->resource['fields']->$f);
         }
         return view($this->resource['view_prefix'] . '.create', compact('fields'));
@@ -108,97 +111,83 @@ class CrudBaseController extends \App\Http\Controllers\Controller
     /**
      * Store a newly created resource in storage.
      */
+    /**
+     * Store a newly created resource in storage.
+     * @return Redirect
+     */
     public function store(Request $request)
     {
-        $v_arr = [];
-        $files = [];
-        $paths = [];
-        $fields = collect([]);
+        $request->validate([
+
+        ]);
         $insert_data = [];
-        $post_data = $request->all();
 
-
-        foreach ($this->resource->fields as $key => $item)
-        {
-            if(isset($post_data[$key]))
+        foreach ($this->resource->fields as $key => $item) {
+            $f_name = 'store_' . $item->type;
+            if (method_exists($this, $f_name) && in_array($key, $this->resource->editable_fields))
             {
-                if($item->type == 'gallery')
-                {
-                    $json_files = [];
-                    if ($request->hasFile($key))
-                    {
-                        foreach ($request->file($key) as $file) {
-                            $json_files[] = $this->storeImage($file, $item->ext);
-                        }
-                    }
-                    $insert_data[$key] = json_encode($json_files);
-                }
-                elseif($item->type == 'files')
-                {
-                    $json_files = [];
-                    if ($request->hasFile($key))
-                    {
-                        foreach ($request->file($key) as $file) {
-                            $json_files[] = $this->storeFile($file, $item->ext);
-                        }
-                    }
-                    $insert_data[$key] = json_encode($json_files);
-                }
-                elseif($item->type == 'user')
-                    $insert_data[$key] = Auth::user()->id;
-                else
-                    $insert_data[$key] = $post_data[$key];
-            }
+                $insert_data[$key] = $this->$f_name($request, $item, $key);
+            } else
+                $insert_data[$key] = $request[$key];
         }
 
-        $this->c_name::create($insert_data);
+        $this->className::create($insert_data);
 
-        return redirect()->route($this->resource['route_prefix'].'.index')->with('success', $this->resource['one_name'] . __(' created successfully.'));
+        return redirect()->route($this->resource['route_prefix'] . '.index')->with('success', $this->resource['one_name'] . __(' created successfully.'));
     }
 
     /**
      * Display the specified resource.
+     * @return View
      */
     public function show($id)
     {
-        $data = $this->c_name::find($id);
+        $data = $this->className::find($id);
+
         if(!$data)
             abort(404);
-        return view($this->resource['view_prefix'] . '.show', compact('data'));
+
+        $view = 'mtm::' . $this->resource['view_prefix'] . '.show';
+        if(!view()->exists($view)){
+            $view = 'mtm::crud_base.show';
+        }
+        return view($view, compact('data'));
     }
 
     /**
      * Show the form for editing the specified resource.
+     * @return View
      */
     public function edit($id)
     {
-        //
-        $data = $this->c_name::find($id);
+        $data = $this->className::find($id);
         if(!$data)
             abort(404);
-        return view($this->resource['view_prefix'] . '.edit', compact('data'));
+
+        $view = 'mtm::' . $this->resource['view_prefix'] . '.edit';
+        if(!view()->exists($view)){
+            $view = 'mtm::crud_base.edit';
+        }
+        return view($view, compact('data'));
     }
 
     /**
      * Update the specified resource in storage.
+     * @return Redirect
      */
     public function update(Request $request, $id)
     {
-        //
         $request->validate([
 
         ]);
 
-        $post_data = $request->all();
-
-        $res = $this->c_name::where('id', $id)->get()->first();
+        $res = $this->className::where('id', $id)->get()->first();
         if(!$res)
             abort(404);
 
         foreach ($this->resource->fields as $key => $item)
         {
-            if(array_key_exists('answer', $post_data) || isset($post_data['new_' . $key]) || isset($post_data['del_' . $key]))
-            {
+            if(isset($request[$key]) || isset($request['new_' . $key]) || isset($request['del_' . $key])) {
                 $f_name = 'update_' . $item->type;
                 if(method_exists($this, $f_name) && in_array($key, $this->resource->editable_fields))
                 {
@@ -207,28 +196,39 @@ class CrudBaseController extends \App\Http\Controllers\Controller
                         $res->$key = $r;
                 }
                 else
-                    $res->$key = $post_data[$key];
+                    $res->$key = $request[$key];
             }
         }
+
         $res->save();
 
         return redirect()->route($this->resource['route_prefix'] . '.index')->with('status', 'Resource Updated Successfully');
     }
 
+
     /**
      * Remove the specified resource from storage.
+     * @return Redirect
      */
     public function destroy($id)
     {
-        $data = $this->c_name::find($id)->delete();
+        $data = $this->className::find($id)->delete();
         return redirect()->route($this->resource['route_prefix'] . '.index')->with('status', 'Resource Delete Successfully');
     }
 
+    /**
+     * Generate Docx document from item
+     * @return Response MS Word document
+     */
+
     public function template($id, $template_index)
     {
-        $data = $this->c_name::find($id);
+        $data = $this->className::find($id);
         $template = $this->resource->template[$template_index];
+
         $templateProcessor = new TemplateProcessor(asset('storage/' . $template->file));
+
+        /** @var  $vars - Variables on the template document */
         $vars = $templateProcessor->getVariables();
         foreach ($vars as $var)
         {
@@ -237,41 +237,34 @@ class CrudBaseController extends \App\Http\Controllers\Controller
             if($var == 'timestamp')
                 $templateProcessor->setValue($var, date('Y-m-d h:i:s'));
 
-            if(isset($this->resource->fields->$var))
-            {
+            if(isset($this->resource->fields->$var)) {
                 $field = $this->resource->fields->$var;
-                if($field->type == 'gallery')
-                {
+                if($field->type == 'gallery') {
                     $arr = [];
                     $d = json_decode($data->$var);
-                    if(is_array($d) && !empty($d))
-                    {
-                        foreach (json_decode($data->$var) as $k => $image) {
+                    if(is_array($d) && !empty($d)) {
+                        foreach (json_decode($data->$var) as $k => $image)
                             $arr[][$var] = '${' . $var.$k . '}';
-                        }
+
                         $templateProcessor->cloneRowAndSetValues($var, $arr);
-                        foreach (json_decode($data->$var) as $k => $image) {
+                        foreach (json_decode($data->$var) as $k => $image)
                             $templateProcessor->setImageValue($var.$k, ['path' => asset('storage' . $image), 'width' => 650, 'height' => 650, 'ratio' => true]);
-                        }
                     }
                 }
-                elseif($field->type == 'list')
-                {
+                elseif($field->type == 'list') {
                     $ext = json_decode($field->ext);
                     $v = $data->$var;
                     if(isset($ext->list))
                         $templateProcessor->setValue($var, $ext->list->$v);
                 }
                 else
-                {
                     $templateProcessor->setValue($var, html_entity_decode(strip_tags($data->$var)));
-                }
             }
         }
 
-        if(!Storage::disk('public')->exists('/templates/temp/')) {
+        /** Save temp document & download */
+        if(!Storage::disk('public')->exists('/templates/temp/'))
             Storage::disk('public')->makeDirectory('/templates/temp/'); //creates directory
-        }
 
         $pathToSave = storage_path('app/public' . '/templates/temp/' . Auth::user()->id. '.docx');
         $templateProcessor->saveAs($pathToSave);
@@ -279,24 +272,26 @@ class CrudBaseController extends \App\Http\Controllers\Controller
         return response()->download($pathToSave);
     }
 
+    /**
+     * Clone item.
+     * @return Redirect
+     */
     public function cloning($id)
     {
-//        $i = 0;
-//        while($i < 1000)
-//        {
-            $data = $this->c_name::find($id)->replicate()->save();
-//            $i++;
-//        }
-
+        $data = $this->className::find($id)->replicate()->save();
         return redirect()->route($this->resource['route_prefix'] . '.index')->with('status', 'Cloning successfully');
     }
 
-    public function storeImage($resource)
+    /**
+     * Store image on the Disk.
+     * @return (string) Image path
+     */
+    public function save_image_on_disk($resource)
     {
         $thumbnails = true;
         $optimize = true;
 
-        //save original image
+        /**  Save original image */
         $path = '/images/' . Str::plural($this->resource['route_prefix']) . '/' . date('Y-m', ) . '/';
 
         if(!Storage::disk('public')->exists($path)) {
@@ -308,6 +303,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
 
         $destinationPath = storage_path('app/public' . $path);
 
+        /** Optimization image */
         if($optimize)
         {
             $height = $image->height();
@@ -318,30 +314,31 @@ class CrudBaseController extends \App\Http\Controllers\Controller
             if($width > 1200)
                 $image->scaleDown(width: 1200);
 
-            $ext = $resource->getClientOriginalExtension();
-            $imageName = str_replace($ext, 'jpg', $imageName);
+            $extension = $resource->getClientOriginalExtension();
+            $imageName = str_replace($extension, 'jpg', $imageName);
             $image->save($destinationPath.$imageName, quality: 80, progressive: true);
 
         }
         else
             $image->save($destinationPath.$imageName);
 
-//        echo "<img src='".asset('storage/' . $path . $imageName)."'>";
-
+        /** Create and save thumbnails */
         if($thumbnails)
         {
             $image->cover(150, 150);
             $thumbName = 't_' . $imageName;
             $image->save($destinationPath.$thumbName);
-
-//            echo "<img src='".asset('storage/' . $path . $thumbName)."'>";
         }
+
         return $path . $imageName;
     }
-    public function storeFile($resource)
-    {
 
-        //save original image
+    /**
+     * Store file on the Disk.
+     * @return (string) File path
+     */
+    public function save_file_on_disk($resource)
+    {
         $path = '/files/' . Str::plural($this->resource['route_prefix']) . '/' . date('Y-m', );
 
         if(!Storage::disk('public')->exists($path)) {
@@ -349,13 +346,18 @@ class CrudBaseController extends \App\Http\Controllers\Controller
         }
 
         $name = time().'-' . Str::slug($resource->getClientOriginalName());
-        $ext = $resource->getClientOriginalExtension();
-        $name = str_replace($ext, '', $name) . '.' . $ext;
+        $extension = $resource->getClientOriginalExtension();
+        $name = str_replace($extension, '', $name) . '.' . $extension;
 
         $path = $resource->storeAs($path, $name, 'public');
 
         return $path;
     }
+
+    /**
+     * Gallery save helper.
+     * @return images[]
+     */
     public function update_gallery($request, $item, $key, $res)
     {
         $json_files = [];
@@ -364,7 +366,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
 
         if($request->hasFile('new_' . $key))
             foreach ($request->file('new_' . $key) as $file) {
-                $json_files[] = $this->storeImage($file, $item->ext);
+                $json_files[] = $this->save_image_on_disk($file, $item->ext);
             }
 
         if(isset($request['del_' . $key]))
@@ -376,23 +378,22 @@ class CrudBaseController extends \App\Http\Controllers\Controller
                 Storage::disk('public')->delete($file);
             }
 
-       return json_encode(array_values($json_files));
-
+        return json_encode(array_values($json_files));
     }
 //
 //    public function update_list($request, $item, $key)
 //    {
 //
 //    }
-    public function update_text_editor($request, $item, $key)
-    {
-        if($request[$key])
-            return $request[$key];
-        else
-        {
-            return " ";
-        }
-    }
+//    public function update_text_editor($request, $item, $key)
+//    {
+//
+//    }
+
+    /**
+     * Files save helper.
+     * @return files[]
+     */
     public function update_files($request, $item, $key, $res)
     {
         $json_files = [];
@@ -401,7 +402,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
 
         if($request->hasFile('new_' . $key))
             foreach ($request->file('new_' . $key) as $file) {
-                $json_files[] = $this->storeFile($file, $item->ext);
+                $json_files[] = $this->save_file_on_disk($file, $item->ext);
             }
 
         if(isset($request['del_' . $key]))
@@ -416,10 +417,20 @@ class CrudBaseController extends \App\Http\Controllers\Controller
         }
         return json_encode(array_values($json_files));
     }
+
+    /**
+     * User save helper.
+     * @return User id
+     */
     public function update_user($request, $item, $key, $res)
     {
         return Auth::user()->id;
     }
+
+    /**
+     * Relation save helper.
+     * @return key or save relation
+     */
     public function update_orm($request, $item, $key, $res)
     {
         $k = $key . '_id';
@@ -431,7 +442,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
             $md = $m::where('id', $request[$key])->first();
             if($md)
             {
-                $kk = $this->m_name . '_id';
+                $kk = $this->modelName . '_id';
                 $md->$kk = $res->id;
                 $md->save();
             }
@@ -439,9 +450,67 @@ class CrudBaseController extends \App\Http\Controllers\Controller
             return false;
         }
     }
+
+    /**
+     * Password save helper.
+     * @return hashed password
+     *
+     */
     public function update_passwd($request, $item, $key, $res)
     {
         if($request[$key] != null)
             return Hash::make($request[$key]);
+    }
+
+    /**
+     * Export resources to Excel
+     * @return xlsx file
+     */
+    public function export(Request $request)
+    {
+        $data = $this->className::get();
+        return Excel::download(new BaseExport($this->resource['view_prefix'], $this->resource, $data), strtolower(Str::plural($this->modelName)) . '-' . date('Y-m-d') . '.xlsx');
+    }
+
+
+    /**
+     * Return saved gallery data.
+     * $return gallery links[]
+     */
+    public function store_gallery($request, $item, $key)
+    {
+        $json_files = [];
+        if ($request->hasFile($key))
+        {
+            foreach ($request->file($key) as $file)
+            {
+                $json_files[] = $this->save_image_on_disk($file, $item->ext);
+            }
+        }
+        return json_encode($json_files);
+    }
+
+    /**
+     * Return saved gallery data.
+     * $return files links[]
+     */
+    public function store_files($request, $item, $key)
+    {
+        $json_files = [];
+        if ($request->hasFile($key)) {
+            foreach ($request->file($key) as $file) {
+                $json_files[] = $this->save_file_on_disk($file, $item->ext);
+            }
+        }
+        return json_encode($json_files);
+    }
+
+    /**
+     * Return saved gallery data.
+     * $return User id
+     */
+    public function store_user($request, $item, $key)
+    {
+        return Auth::user()->id;
     }
 }
