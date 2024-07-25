@@ -17,7 +17,7 @@
         "phpoffice/phpword": "^1.2",
         "tonysm/rich-text-laravel": "^3.1"
     },
-    "version": "1.1",
+    "version": "1.2",
     "autoload": {
         "psr-4": {
             "Chernogolov\\Mtm\\": "src/"
