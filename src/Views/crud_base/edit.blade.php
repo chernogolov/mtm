@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-mtm-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800">
             {{__('Edit')}} {{ $res->one_name }}
@@ -100,4 +100,4 @@
             </div>
             </div>
         </div>
-</x-app-layout>
+</x-mtm-layout>

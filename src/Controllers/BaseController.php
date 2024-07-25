@@ -14,13 +14,12 @@ class BaseController extends \App\Http\Controllers\Controller
     public function __construct()
     {
         // Add resources into view
-        $this->resources = config('resources');
-
+        $this->resources = config('mtm.resources');
     }
 
     public function dashboard()
     {
-        return view('dashboard');
+        return view('mtm::dashboard');
     }
 
 }
