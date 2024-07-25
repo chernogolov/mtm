@@ -2,9 +2,12 @@
 
 namespace Chernogolov\Mtm;
 
+use Chernogolov\Mtm\View\MtmLayout;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
-
+use Illuminate\Support\Facades\Blade;
+use Chernogolov\Mtm\Models\Resource;
+use Illuminate\Support\Facades\View;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -33,14 +36,20 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([
             __DIR__.'/Assets' => public_path('vendor/mtm'),
         ], 'public');
+//
+//        Gate::define('view-admin', function ($user) {
+//            return in_array($user->id, [1]);
+//        });
+//
+//        Gate::define('view-regs', function ($user) {
+//            return RegsUsers::where([['user_id', '=', $user->id],['view', '=', 1]])->first();
+//        });
 
-        Gate::define('view-admin', function ($user) {
-            return in_array($user->id, [1]);
-        });
+        $resources = Resource::all();
+        View::share('resources', $resources);
 
-        Gate::define('view-regs', function ($user) {
-            return RegsUsers::where([['user_id', '=', $user->id],['view', '=', 1]])->first();
-        });
+        Blade::component('mtm-layout', MtmLayout::class);
+
 
         include __DIR__.'/Routes/Routes.php';
     }
