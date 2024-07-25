@@ -13,10 +13,10 @@
                     </div>
                     <div class="text-right">
                         <div class="text-xs block">
-                            Создано: {{$data->created_at}}
+                            {{__('Created at')}}: {{$data->created_at}}
                         </div>
                         <div class="text-xs block">
-                            Обновлено: {{$data->updated_at}}
+                            {{__('Updated at')}}: {{$data->updated_at}}
                         </div>
                     </div>
                 </div>
@@ -40,8 +40,8 @@
                                                 @if(isset($f_data->template))
                                                     <x-dynamic-component :component="'edit-'.$fields->$key->template.'-field'" class="lg:col-span-2  w-1/3" :value="$data->$field" :name="$key" :data="$fields->$key" :object="$data" :res="$res"/>
                                                 @else
-                                                    @if(View::exists('components.edit-'.$fields->$key->type.'-field'))
-                                                        <x-dynamic-component :component="'edit-'.$fields->$key->type.'-field'" class="lg:col-span-2" :value="$data->$key" :name="$key" :data="$fields->$key" :object="$data" :res="$res"/>
+                                                    @if(View::exists('mtm::components.edit-'.$fields->$key->type.'-field'))
+                                                        <x-dynamic-component :component="'mtm::edit-'.$fields->$key->type.'-field'" class="lg:col-span-2" :value="$data->$key" :name="$key" :data="$fields->$key" :object="$data" :res="$res"/>
                                                     @else
                                                         <x-text-input id="$key" class="block mt-1 w-full" type="text" :name="$key" autocomplete="" :value="$data->$key" autofocus autocomplete="$key" :object="$data" :res="$res"/>
                                                     @endif
@@ -61,7 +61,7 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 mr-2">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
                                             </svg>
-                                            Назад
+                                            {{__('Back')}}
                                         </x-secondary-button>
                                     </a>
 
@@ -71,7 +71,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                             </svg>
-                                            Просмотр
+                                            {{__('View')}}
                                         </x-secondary-button>
                                     </a>
 
@@ -79,7 +79,7 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 mr-2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                                         </svg>
-                                        Сохранить
+                                        {{__('Save')}}
                                     </x-primary-button>
                                 </div>
                             </form>

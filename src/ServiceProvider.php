@@ -49,6 +49,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         View::share('resources', $resources);
 
         Blade::component('mtm-layout', MtmLayout::class);
+        Blade::componentNamespace('Chernogolov\\Mtm\\Components', 'mtmcom');
 
 
         include __DIR__.'/Routes/Routes.php';

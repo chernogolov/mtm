@@ -182,7 +182,7 @@
                                                         <div id="editor_{{$key}}" class="w-100 h-40 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"></div>
                                                         <textarea id="{{$key}}_ext"  name="fields[{{$key}}][ext]" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">@if(isset($field->ext)){{$field->ext}}@endif</textarea>
                                                         <x-input-error class="mt-2" :messages="$errors->get($key.'ext')" />
-                                                        <script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+                                                        <script src="/vendor/mtm/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
                                                         <script>
                                                             var editor_{{$key}} = ace.edit("editor_{{$key}}");
                                                             document.getElementById('{{$key}}_ext').setAttribute('style', 'visibility:hidden;');
@@ -236,9 +236,22 @@
                                                         <x-input-error class="mt-2" :messages="$errors->get($field.'template')" />
                                                     </td>
                                                     <td class="px-6 py-4">
-                                                        <div id="editor"></div>
+                                                        <div id="editor_{{$field}}" class="w-100 h-40 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"></div>
                                                         <textarea id="{{$field}}_ext"  name="fields[{{$field}}][ext]" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"></textarea>
                                                         <x-input-error class="mt-2" :messages="$errors->get($field.'ext')" />
+                                                        <script src="/vendor/mtm/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+                                                        <script>
+                                                            var editor_{{$field}} = ace.edit("editor_{{$field}}");
+                                                            document.getElementById('{{$field}}_ext').setAttribute('style', 'visibility:hidden;');
+                                                            var val = document.getElementById('{{$field}}_ext').value;
+                                                            editor_{{$field}}.getSession().setValue(val);
+                                                            editor_{{$field}}.getSession().on('change', function() {
+                                                                document.getElementById('{{$field}}_ext').value = editor_{{$field}}.getSession().getValue();
+                                                            });
+
+                                                            editor_{{$field}}.setTheme("ace/theme/github");
+                                                            editor_{{$field}}.session.setMode("ace/mode/json");
+                                                        </script>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -362,7 +375,6 @@
                                         {{__('Save')}}
                                     </x-primary-button>
                                 </div>
-
                             </form>
                         </div>
                     </div>

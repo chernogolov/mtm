@@ -9,11 +9,11 @@
                     </label>
                     <div class="w-full">
                         @if(isset($data->template))
-                            <x-dynamic-component :component="'add-'.$resource->fields->$field->template.'-field'" class="w-full" :name="$field" :data="$resource->fields->$field"/>
-                        @elseif(View::exists('components.user-'.$resource->fields->$field->type.'-field'))
-                            <x-dynamic-component :component="'user-'.$resource->fields->$field->type.'-field'" class="w-full" :name="$field" :data="$resource->fields->$field"/>
+                            <x-dynamic-component :component="'mtm::add-'.$resource->fields->$field->template.'-field'" class="w-full" :name="$field" :data="$resource->fields->$field"/>
+                        @elseif(View::exists('mtm::components.user-'.$resource->fields->$field->type.'-field'))
+                            <x-dynamic-component :component="'mtm::user-'.$resource->fields->$field->type.'-field'" class="w-full" :name="$field" :data="$resource->fields->$field"/>
                         @else
-                            <x-dynamic-component :component="'add-'.$resource->fields->$field->type.'-field'" class="w-full" :name="$field" :data="$resource->fields->$field"/>
+                            <x-dynamic-component :component="'mtm::add-'.$resource->fields->$field->type.'-field'" class="w-full" :name="$field" :data="$resource->fields->$field"/>
                         @endif
                     </div>
                     @error($field)

@@ -2,7 +2,7 @@
 
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800">
-            Просмотр {{ __($res['one_name']) }}
+            {{__('View')}} {{ __($res['one_name']) }}
         </h2>
     </x-slot>
 
@@ -15,10 +15,10 @@
                     </div>
                     <div class="text-right">
                         <div class="text-xs block">
-                            Создано: {{$data->created_at}}
+                            {{__('Created at')}}: {{$data->created_at}}
                         </div>
                         <div class="text-xs block">
-                            Обновлено: {{$data->updated_at}}
+                            {{__('Updated at')}}: {{$data->updated_at}}
                         </div>
                     </div>
                 </div>
@@ -37,8 +37,8 @@
                                     @if(isset($fields->$key->template))
                                         <x-dynamic-component :component="'view-'.$fields->$key->template.'-field'" class="lg:col-span-2" :value="$data" :field="$fields->$key" :data="$fields->$key" :name="$key" :object="$data"/>
                                     @else
-                                        @if(View::exists('components.view-'.$fields->$key->type.'-field'))
-                                            <x-dynamic-component :component="'view-'.$fields->$key->type.'-field'" class="lg:col-span-2" :value="$data->$key" :field="$fields->$key" :data="$fields->$key" :name="$key" :object="$data"/>
+                                        @if(View::exists('mtm::components.view-'.$fields->$key->type.'-field'))
+                                            <x-dynamic-component :component="'mtm::view-'.$fields->$key->type.'-field'" class="lg:col-span-2" :value="$data->$key" :field="$fields->$key" :data="$fields->$key" :name="$key" :object="$data"/>
                                         @else
                                             {{$data->$key}}
                                         @endif
@@ -55,7 +55,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 mr-2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
                             </svg>
-                            Назад
+                            {{__('Back')}}
                         </x-secondary-button>
                     </a>
                     <a class="mr-2" href="{{ route($res['route_prefix'] . '.edit', $data->id) }}" title="{{__('Edit')}}">
@@ -63,7 +63,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mr-2 w-4 h-4">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
                             </svg>
-                            Редактировать
+                            {{__('Edit')}}
                         </x-secondary-button>
                     </a>
                     @if(!empty($res->template))
@@ -73,7 +73,7 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mr-2 w-4 h-4">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                     </svg>
-                                    Скачать шаблон
+                                    {{__('Download template')}}
                                 </x-secondary-button>
                             </a>
                         @endforeach

@@ -25,8 +25,8 @@
                                     @if(isset($data->template) && View::exists('components.add-'.$data->template.'-field'))
                                         <x-dynamic-component :component="'add-'.$data->template.'-field'" class="lg:col-span-2" :name="$field" :data="$data"/>
                                     @else
-                                        @if(View::exists('components.add-'.$data->type.'-field'))
-                                            <x-dynamic-component :component="'add-'.$data->type.'-field'" class="lg:col-span-2" :name="$field" :data="$data"/>
+                                        @if(View::exists('mtm::components.add-'.$data->type.'-field'))
+                                            <x-dynamic-component :component="'mtm::add-'.$data->type.'-field'" class="lg:col-span-2" :name="$field" :data="$data"/>
                                         @else
                                             <x-text-input id="$key" class="block mt-1 w-full" type="text" :name="$field" autocomplete="" autofocus autocomplete="$field"/>
                                         @endif
