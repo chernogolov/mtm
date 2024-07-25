@@ -18,7 +18,7 @@
 
                     <div class="mt-1 mb-4">
                         <h1>
-                            Редактирование ресурсов
+                            {{__('Resource edit')}}
                         </h1>
                     </div>
 {{--                    <form method="get" action="{{ route($res['route_prefix'] . '.index') }}" >--}}
@@ -28,16 +28,16 @@
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">
-                                            Модель
+                                            {{__('Model')}}
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            Имя
+                                            {{__('Name')}}
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            Префикс маршрутов
+                                            {{__('Route prefix')}}
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            Папка представлений
+                                            {{__('View prefix')}}
                                         </th>
                                         <th scope="col" class="px-6 py-3">
 

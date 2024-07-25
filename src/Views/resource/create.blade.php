@@ -13,22 +13,22 @@
                             <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-styled-tab" data-tabs-toggle="#default-styled-tab-content" data-tabs-active-classes="text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500" data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300" role="tablist">
                                 <li @click="currentTab = 'data'" class="me-2" role="presentation">
                                     <button class="inline-block p-4 border-b-2 rounded-t-lg" id="profile-styled-tab" data-tabs-target="#styled-profile" type="button" role="tab" aria-controls="profile" aria-selected="false">
-                                        Основное
+                                        {{__('Base')}}
                                     </button>
                                 </li>
                                 <li @click="currentTab = 'fields'" class="me-2" role="presentation">
                                     <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="dashboard-styled-tab" data-tabs-target="#styled-dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="false">
-                                        Поля
+                                        {{__('Fields')}}
                                     </button>
                                 </li>
                                 <li @click="currentTab = 'templates'" class="me-2" role="presentation">
                                     <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="contacts-styled-tab" data-tabs-target="#styled-contacts" type="button" role="tab" aria-controls="contacts" aria-selected="false">
-                                        Шаблоны
+                                        {{__('Templates')}}
                                     </button>
                                 </li>
                                 <li @click="currentTab = 'access'" class="me-2" role="presentation">
                                     <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="contacts-styled-tab" data-tabs-target="#styled-contacts" type="button" role="tab" aria-controls="contacts" aria-selected="false">
-                                        Доступ
+                                        {{__('Access')}}
                                     </button>
                                 </li>
                             </ul>
@@ -82,19 +82,19 @@
                                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                             <tr>
                                                 <th scope="col" class="px-6 py-3">
-                                                    Поле
+                                                    {{__('Field')}}
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
-                                                    Имя(рус)
+                                                    {{__('Name')}}
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
-                                                    Тип
+                                                    {{__('Type')}}
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
-                                                    Шаблон
+                                                    {{__('Template')}}
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
-                                                    Дополнительно
+                                                    {{__('Options')}}
                                                 </th>
                                             </tr>
                                             </thead>
@@ -110,20 +110,22 @@
                                                         </td>
                                                         <td class="px-6 py-4">
                                                             <select id="{{$field}}_type" name="fields[{{$field}}][type]" form="data-form" type="text" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required autofocus autocomplete="{{$field}}_type" />
-                                                                <option value="string">Строка</option>
-                                                                <option value="link">Ссылка</option>
-                                                                <option value="textarea">Текст</option>
-                                                                <option value="text_editor">Редактор</option>
-                                                                <option value="date">Дата</option>
-                                                                <option value="datetime">Дата и время</option>
-                                                                <option value="deadline">Дедлайн</option>
-                                                                <option value="list">Список</option>
-                                                                <option value="file">Файл</option>
-                                                                <option value="files">Файлы</option>
-                                                                <option value="image">Картинка</option>
-                                                                <option value="gallery">Галерея</option>
-                                                                <option value="orm">Связь</option>
-                                                                <option value="passwd">Пароль</option>
+                                                                <option value="string">{{__('String')}}</option>
+                                                                <option value="link">{{__('Link')}}</option>
+                                                                <option value="textarea">{{__('Text')}}</option>
+                                                                <option value="text_editor">{{__('Editor')}}</option>
+                                                                <option value="date">{{__('Date')}}</option>
+                                                                <option value="datetime">{{__('Datetime')}}</option>
+                                                                <option value="deadline">{{__('Deadline')}}</option>
+                                                                <option value="list">{{__('List')}}</option>
+                                                                <option value="file">{{__('File')}}</option>
+                                                                <option value="files">{{__('Files')}}</option>
+                                                                <option value="image">{{__('Image')}}</option>
+                                                                <option value="gallery">{{__('Gallery')}}</option>
+                                                                <option value="orm">{{__('Orm')}}</option>
+                                                                <option value="address">{{__('Address')}}</option>
+                                                                <option value="coords">{{__('Coords')}}</option>
+                                                                <option value="passwd">{{__('Password')}}</option>
                                                             </select>
                                                             <x-input-error class="mt-2" :messages="$errors->get($field.'title')" />
                                                         </td>
@@ -144,19 +146,19 @@
 
                                 </div>
                                 <div x-show="currentTab === 'templates'" class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
-                                    Шаблоны импорта / экспорта
+                                    {{__('Templates')}}
                                 </div>
                                 <div x-show="currentTab === 'access'" class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
-                                    Настройка доступа
+                                    {{__('Access')}}
                                 </div>
                                 <div class="flex justify-between">
                                     <a href="{{route('resources.index')}}">
                                         <x-secondary-button class="mt-4">
-                                            Назад
+                                            {{__('Back')}}
                                         </x-secondary-button>
                                     </a>
                                     <x-primary-button type="submit" form="data-form" class="mt-4">
-                                        Сохранить
+                                        {{__('Save')}}
                                     </x-primary-button>
                                 </div>
                             </form>

@@ -13,42 +13,42 @@
                             <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-styled-tab" data-tabs-toggle="#default-styled-tab-content" data-tabs-active-classes="text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500" data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300" role="tablist">
                                 <li @click="currentTab = 'data'" class="me-2" role="presentation">
                                     <button class="inline-block p-4 border-b-2 rounded-t-lg" id="profile-styled-tab" data-tabs-target="#styled-profile" type="button" role="tab" aria-controls="profile" aria-selected="false">
-                                        Основное
+                                        {{__('Basic')}}
                                     </button>
                                 </li>
                                 <li @click="currentTab = 'fields'" class="me-2" role="presentation">
                                     <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="dashboard-styled-tab" data-tabs-target="#styled-dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="false">
-                                        Поля
+                                        {{__('Fields')}}
                                     </button>
                                 </li>
                                 <li @click="currentTab = 'relations'" class="me-2" role="presentation">
                                     <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="dashboard-styled-tab" data-tabs-target="#styled-dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="false">
-                                        Отношения
+                                        {{__('Relations')}}
                                     </button>
                                 </li>
                                 <li @click="currentTab = 'templates'" class="me-2" role="presentation">
                                     <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="contacts-styled-tab" data-tabs-target="#styled-contacts" type="button" role="tab" aria-controls="contacts" aria-selected="false">
-                                        Шаблоны
+                                        {{__('Templates')}}
                                     </button>
                                 </li>
                                 <li @click="currentTab = 'widgets'" class="me-2" role="presentation">
                                     <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="contacts-styled-tab" data-tabs-target="#styled-contacts" type="button" role="tab" aria-controls="contacts" aria-selected="false">
-                                        Виджеты
+                                        {{__('Widgets')}}
                                     </button>
                                 </li>
                                 <li @click="currentTab = 'forms'" class="me-2" role="presentation">
                                     <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="contacts-styled-tab" data-tabs-target="#styled-contacts" type="button" role="tab" aria-controls="contacts" aria-selected="false">
-                                        Формы
+                                        {{__('Forms')}}
                                     </button>
                                 </li>
                                 <li @click="currentTab = 'api'" class="me-2" role="presentation">
                                     <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="contacts-styled-tab" data-tabs-target="#styled-contacts" type="button" role="tab" aria-controls="contacts" aria-selected="false">
-                                        API
+                                        {{__('API')}}
                                     </button>
                                 </li>
                                 <li @click="currentTab = 'access'" class="me-2" role="presentation">
                                     <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="contacts-styled-tab" data-tabs-target="#styled-contacts" type="button" role="tab" aria-controls="contacts" aria-selected="false">
-                                        Доступ
+                                        {{__('Access')}}
                                     </button>
                                 </li>
                             </ul>
@@ -127,19 +127,19 @@
                                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                             <tr>
                                                 <th scope="col" class="px-6 py-3 w-1/12">
-                                                    Поле
+                                                    {{__('Field')}}
                                                 </th>
                                                 <th scope="col" class="px-6 py-3 w-2/12">
-                                                    Имя(рус)
+                                                    {{__('Name')}}
                                                 </th>
                                                 <th scope="col" class="px-6 py-3 w-3/12">
-                                                    Тип
+                                                    {{__('Type')}}
                                                 </th>
                                                 <th scope="col" class="px-6 py-3 w-2/12">
-                                                    Шаблон
+                                                    {{__('Template')}}
                                                 </th>
                                                 <th scope="col" class="px-6 py-3 w-4/12">
-                                                    Дополнительно
+                                                    {{__('Options')}}
                                                 </th>
                                             </tr>
                                             </thead>
@@ -155,22 +155,22 @@
                                                     </td>
                                                     <td class="px-6 py-4">
                                                         <select id="{{$key}}_type" name="fields[{{$key}}][type]" form="data-form" type="text" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required autofocus autocomplete="{{$key}}_type" />
-                                                        <option value="string" @if($field->type == 'string') selected @endif>Строка</option>
-                                                        <option value="link" @if($field->type == 'link') selected @endif>Ссылка</option>
-                                                        <option value="textarea" @if($field->type == 'textarea') selected @endif>Текст</option>
-                                                        <option value="text_editor" @if($field->type == 'text_editor') selected @endif>Редактор</option>
-                                                        <option value="date" @if($field->type == 'date') selected @endif>Дата</option>
-                                                        <option value="datetime" @if($field->type == 'datetime') selected @endif>Дата и время</option>
-                                                        <option value="deadline" @if($field->type == 'deadline') selected @endif>Дедлайн</option>
-                                                        <option value="list" @if($field->type == 'list') selected @endif>Список</option>
-                                                        <option value="file" @if($field->type == 'file') selected @endif>Файл</option>
-                                                        <option value="files" @if($field->type == 'files') selected @endif>Файлы</option>
-                                                        <option value="image" @if($field->type == 'image') selected @endif>Картинка</option>
-                                                        <option value="gallery" @if($field->type == 'gallery') selected @endif>Галерея</option>
-                                                        <option value="orm" @if($field->type == 'orm') selected @endif>Связь</option>
-                                                        <option value="address" @if($field->type == 'address') selected @endif>Адрес</option>
-                                                        <option value="coords" @if($field->type == 'coords') selected @endif>Координаты</option>
-                                                        <option value="passwd" @if($field->type == 'passwd') selected @endif>Пароль</option>
+                                                        <option value="string" @if($field->type == 'string') selected @endif>{{__('String')}}</option>
+                                                        <option value="link" @if($field->type == 'link') selected @endif>{{__('Link')}}</option>
+                                                        <option value="textarea" @if($field->type == 'textarea') selected @endif>{{__('Text')}}</option>
+                                                        <option value="text_editor" @if($field->type == 'text_editor') selected @endif>{{__('Editor')}}</option>
+                                                        <option value="date" @if($field->type == 'date') selected @endif>{{__('Date')}}</option>
+                                                        <option value="datetime" @if($field->type == 'datetime') selected @endif>{{__('Datetime')}}</option>
+                                                        <option value="deadline" @if($field->type == 'deadline') selected @endif>{{__('Deadline')}}</option>
+                                                        <option value="list" @if($field->type == 'list') selected @endif>{{__('List')}}</option>
+                                                        <option value="file" @if($field->type == 'file') selected @endif>{{__('File')}}</option>
+                                                        <option value="files" @if($field->type == 'files') selected @endif>{{__('Files')}}</option>
+                                                        <option value="image" @if($field->type == 'image') selected @endif>{{__('Image')}}</option>
+                                                        <option value="gallery" @if($field->type == 'gallery') selected @endif>{{__('Gallery')}}</option>
+                                                        <option value="orm" @if($field->type == 'orm') selected @endif>{{__('Orm')}}</option>
+                                                        <option value="address" @if($field->type == 'address') selected @endif>{{__('Address')}}</option>
+                                                        <option value="coords" @if($field->type == 'coords') selected @endif>{{__('Coordinates')}}</option>
+                                                        <option value="passwd" @if($field->type == 'passwd') selected @endif>{{__('Password')}}</option>
                                                         </select>
                                                         <x-input-error class="mt-2" :messages="$errors->get($key.'title')" />
                                                     </td>
@@ -212,22 +212,22 @@
                                                     </td>
                                                     <td class="px-6 py-4">
                                                         <select id="{{$field}}_type" name="fields[{{$field}}][type]" form="data-form" type="text" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required autofocus autocomplete="{{$field}}_type" />
-                                                        <option value="string">Строка</option>
-                                                        <option value="link">Ссылка</option>
-                                                        <option value="textarea">Текст</option>
-                                                        <option value="text_editor">Редактор</option>
-                                                        <option value="date">Дата</option>
-                                                        <option value="datetime">Дата и время</option>
-                                                        <option value="deadline">Дедлайн</option>
-                                                        <option value="list">Список</option>
-                                                        <option value="file">Файл</option>
-                                                        <option value="files">Файлы</option>
-                                                        <option value="image">Картинка</option>
-                                                        <option value="gallery">Галерея</option>
-                                                        <option value="orm">Связь</option>
-                                                        <option value="address">Адрес</option>
-                                                        <option value="coords">Координаты</option>
-                                                        <option value="passwd">Пароль</option>
+                                                        <option value="string">{{__('String')}}</option>
+                                                        <option value="link">{{__('Link')}}</option>
+                                                        <option value="textarea">{{__('Text')}}</option>
+                                                        <option value="text_editor">{{__('Editor')}}</option>
+                                                        <option value="date">{{__('Date')}}</option>
+                                                        <option value="datetime">{{__('Datetime')}}</option>
+                                                        <option value="deadline">{{__('Deadline')}}</option>
+                                                        <option value="list">{{__('List')}}</option>
+                                                        <option value="file">{{__('File')}}</option>
+                                                        <option value="files">{{__('Files')}}</option>
+                                                        <option value="image">{{__('Image')}}</option>
+                                                        <option value="gallery">{{__('Gallery')}}</option>
+                                                        <option value="orm">{{__('Orm')}}</option>
+                                                        <option value="address">{{__('Address')}}</option>
+                                                        <option value="coords">{{__('Coords')}}</option>
+                                                        <option value="passwd">{{__('Password')}}</option>
                                                         </select>
                                                         <x-input-error class="mt-2" :messages="$errors->get($field.'title')" />
                                                     </td>
@@ -247,26 +247,26 @@
                                     </div>
                                 </div>
                                 <div x-show="currentTab === 'relations'" class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-profile" role="tabpanel" aria-labelledby="relations-tab">
-                                    Отношения
+                                    {{__('Relations')}}
                                     <div class="mb-6">
                                         <div>
                                             <table>
                                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                                 <tr>
                                                     <th scope="col" class="px-6 py-3 w-2/12">
-                                                        Слаг
+                                                        {{__('Slug')}}
                                                     </th>
                                                     <th scope="col" class="px-6 py-3 w-2/12">
-                                                        Имя
+                                                        {{__('Name')}}
                                                     </th>
                                                     <th scope="col" class="px-6 py-3 w-3/12">
-                                                        Тип
+                                                        {{__('Type')}}
                                                     </th>
                                                     <th scope="col" class="px-6 py-3 w-2/12">
-                                                        Шаблон
+                                                        {{__('Template')}}
                                                     </th>
                                                     <th scope="col" class="px-6 py-3 w-3/12">
-                                                        Дополнительно
+                                                        {{__('Options')}}
                                                     </th>
                                                 </tr>
                                                 </thead>
@@ -282,11 +282,11 @@
                                                         </td>
                                                         <td class="px-6 py-4">
                                                             <select id="orm_type" name="orm[type]" form="data-form" type="text" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required autofocus autocomplete="orm_type" />
-                                                            <option value="hasOne">Один к одному</option>
-                                                            <option value="belongsTo">Один к одному(обратное)</option>
-                                                            <option value="hasMany">Один ко многим</option>
-                                                            <option value="belongsTo">Один ко многим(обратное)</option>
-                                                            <option value="belongsToMany">Многие ко многим</option>
+                                                            <option value="hasOne">{{__('One to one')}}</option>
+                                                            <option value="belongsTo">{{__('One to one (return)')}}</option>
+                                                            <option value="hasMany">{{__('One to more')}}</option>
+                                                            <option value="belongsTo">{{__('One to more (return)')}}</option>
+                                                            <option value="belongsToMany">{{__('More to more')}}</option>
                                                             </select>
                                                             <x-input-error class="mt-2" :messages="$errors->get('orm.type')" />
                                                         </td>
@@ -295,7 +295,7 @@
                                                             <x-input-error class="mt-2" :messages="$errors->get('orm.template')" />
                                                         </td>
                                                         <td class="px-6 py-4">
-                                                            Создайте отношение для отображения настроек
+                                                            {{__('Create relations for set up')}}
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -305,7 +305,7 @@
                                     </div>
                                 </div>
                                 <div x-show="currentTab === 'templates'" class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
-                                    Шаблон выгрузки
+                                    {{__('Upload template')}}
                                     <div class="mb-6">
                                         <div >
                                             @if($resource->template)
@@ -322,10 +322,10 @@
                                     </div>
                                 </div>
                                 <div x-show="currentTab === 'widgets'" class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
-                                    Виджет на главной
+                                    {{__('Widgets')}}
                                 </div>
                                 <div x-show="currentTab === 'forms'" class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
-                                    Форма
+                                    {{__('Forms')}}
                                     <div class="mb-6">
                                         <div >
                                             <x-input-label for="form_fields" :value="__('Form fields')" />
@@ -335,12 +335,12 @@
                                     </div>
                                     <div class="mb-6">
                                         <div >
-                                            Ссылка на форму: <a href="{{Asset('form/' . strtolower($resource->model_name))}}">{{Asset('form/' . strtolower($resource->model_name))}}</a>
+                                            {{__('Form link')}}: <a href="{{Asset('form/' . strtolower($resource->model_name))}}">{{Asset('form/' . strtolower($resource->model_name))}}</a>
                                         </div>
                                     </div>
                                 </div>
                                 <div x-show="currentTab === 'api'" class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
-                                    API
+                                    {{__('API')}}
                                     <div class="mb-6">
                                         <div >
                                             <x-input-label for="api_fields" :value="__('API fields')" />
@@ -350,16 +350,16 @@
                                     </div>
                                 </div>
                                 <div x-show="currentTab === 'access'" class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
-                                    Настройка доступа
+                                    {{__('Access')}}
                                 </div>
                                 <div class="flex justify-between">
                                     <a href="{{route('resources.index')}}">
                                         <x-secondary-button class="mt-4">
-                                            Назад
+                                            {{__('Back')}}
                                         </x-secondary-button>
                                     </a>
                                     <x-primary-button type="submit" form="data-form" class="mt-4">
-                                        Сохранить
+                                        {{__('Save')}}
                                     </x-primary-button>
                                 </div>
 
@@ -369,5 +369,4 @@
                 </div>
             </div>
         </div>
-
 </x-mtm-layout>
