@@ -3,6 +3,7 @@
 namespace Chernogolov\Mtm\Controllers;
 
 use Chernogolov\Mtm\Models\Resource;
+use Chernogolov\Mtm\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
@@ -88,6 +89,15 @@ class ResourceController extends \App\Http\Controllers\Controller
 
         /* Create resourse permissions and check for creations base roles */
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
+
+        $users = User::all();
+        if($users->count() == 1)
+        {
+            if(!$users->first()->hasRole('Super-Admin'))
+            {
+                $users->first()->assignRole('Super-Admin');
+            }
+        }
 
         if(!Role::where('name', 'Super-Admin')->first())
             $sa_role = Role::create(['name' => 'Super-Admin']);
