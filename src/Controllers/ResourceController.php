@@ -12,6 +12,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 
 class ResourceController extends \App\Http\Controllers\Controller
@@ -61,14 +64,11 @@ class ResourceController extends \App\Http\Controllers\Controller
 //                $fields->put($f, $this->resource['fields'][$f]);
 //        }
 
-
-
         $post_data = $request->all();
         if(!isset($post_data['name']))
             abort('404');
 
         $fields = Schema::getColumnListing(Str::plural(Str::lower($post_data['name'])));
-
         return view('mtm::resource.create', ['fields' => $fields, 'name' => $post_data['name']]);
     }
 
@@ -84,9 +84,26 @@ class ResourceController extends \App\Http\Controllers\Controller
 //        $v_arr = [];
 //        $request->validate($v_arr);
 
+        $name = Str::lower($post_data['data']['model_name']);
+
+        /* Create resourse permissions and check for creations base roles */
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+
+        if(!Role::where('name', 'Super-Admin')->first())
+            $sa_role = Role::create(['name' => 'Super-Admin']);
+
+        if(!Role::where('name', 'operator')->first())
+            $sa_role = Role::create(['name' => 'operator']);
+
+        Permission::create(['name' => 'list '.$name]);
+        Permission::create(['name' => 'create '.$name]);
+        Permission::create(['name' => 'edit '.$name]);
+        Permission::create(['name' => 'delete '.$name]);
+
         Resource::create($data);
 
-        return redirect()->route('mtm::resources.index')->with('success', $this->resource['one_name'] . __(' created successfully.'));
+
+        return redirect()->route('resources.index')->with('success', $this->resource['one_name'] . __(' created successfully.'));
     }
 
     /**
@@ -103,6 +120,8 @@ class ResourceController extends \App\Http\Controllers\Controller
     public function edit($id)
     {
         //
+//        $r = \Spatie\Permission\Models\Permission::where('name', 'like', '%'.Str::lower('User').'%')->get();
+//        dd($r);
         $resource = Resource::where('id', $id)->first();
         $fields = Schema::getColumnListing(Str::plural(Str::lower($resource->model_name)));
         return view('mtm::resource.edit', compact('resource', 'fields'));
@@ -120,7 +139,14 @@ class ResourceController extends \App\Http\Controllers\Controller
         $post_data = $request->all();
         $res = Resource::find($resource->id);
 
-
+        if(isset($post_data['permissions']))
+        {
+            foreach($post_data['permissions'] as $permissionName => $roleNames)
+            {
+                $permission = Permission::where('name', $permissionName)->first();
+                $permission->syncRoles($roleNames);
+            }
+        }
 
         if(isset($post_data['template']) && $post_data['template'])
         {
@@ -171,8 +197,14 @@ class ResourceController extends \App\Http\Controllers\Controller
      */
     public function destroy($id)
     {
-        $resource = Resource::find($id)->delete();
-        return redirect()->route('mtm::resources.index')->with('status', 'Resource Delete Successfully');
+        $resource = Resource::find($id);
+        $name = Str::lower($resource['model_name']);
+        $r = $resource->delete();
+        Permission::where(['name' => 'list '.$name])->delete();
+        Permission::where(['name' => 'create '.$name])->delete();
+        Permission::where(['name' => 'edit '.$name])->delete();
+        Permission::where(['name' => 'delete '.$name])->delete();
+        return redirect()->route('resources.index')->with('status', 'Resource Delete Successfully');
     }
 
 

@@ -13,6 +13,7 @@ use Chernogolov\Mtm\Exports\BaseExport;
 use \PhpOffice\PhpWord\TemplateProcessor;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
+use Chernogolov\Mtm\Models\User;
 
 use Illuminate\Support\Str;
 
@@ -21,9 +22,16 @@ class CrudBaseController extends \App\Http\Controllers\Controller
     public $resource = [];
     public $modelName;
     public $className;
+    public $mtmUser;
 
     public function __construct()
     {
+        /** Check user permissions */
+        $this->mtmUser = User::find(Auth::user()->id);
+        View::share('mtmUser', $this->mtmUser);
+        if(!$this->mtmUser->hasPermissionTo('list '.Str::lower($this->modelName)) && !$this->mtmUser->hasRole('Super-Admin'))
+            abort(404);
+
         /** Get resource data from database */
         $this->resource = Resource::where('model_name', $this->modelName)->first();
 
@@ -75,7 +83,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
                 $itm->with($of);
 
         /** Delete items */
-        if (isset($request['delete_selected'])) {
+        if (isset($request['delete_selected']) && !empty($request['delete'])) {
             foreach ($request['delete'] as $id => $item) {
                 $d = $this->className::find($id);
                 if ($d)
@@ -100,12 +108,21 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function create()
     {
+        if(!$this->mtmUser->hasPermissionTo('create '.Str::lower($this->modelName)) && !$this->mtmUser->hasRole('Super-Admin'))
+            abort(404);
+
         $fields = collect([]);
         foreach ($this->resource['editable_fields'] as $f) {
             if (isset($this->resource['fields']->$f))
                 $fields->put($f, $this->resource['fields']->$f);
         }
-        return view($this->resource['view_prefix'] . '.create', compact('fields'));
+
+        $view = 'mtm::' . $this->resource['view_prefix'] . '.create';
+        if(!view()->exists($view)){
+            $view = 'mtm::crud_base.create';
+        }
+
+        return view($view, compact('fields'));
     }
 
     /**
@@ -117,6 +134,9 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function store(Request $request)
     {
+        if(!$this->mtmUser->hasPermissionTo('create '.Str::lower($this->modelName)) && !$this->mtmUser->hasRole('Super-Admin'))
+            abort(404);
+
         $request->validate([
 
         ]);
@@ -142,6 +162,9 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function show($id)
     {
+        if(!$this->mtmUser->hasPermissionTo('list '.Str::lower($this->modelName)) && !$this->mtmUser->hasRole('Super-Admin'))
+            abort(404);
+
         $data = $this->className::find($id);
 
         if(!$data)
@@ -160,6 +183,9 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function edit($id)
     {
+        if(!$this->mtmUser->hasPermissionTo('edit '.Str::lower($this->modelName)) && !$this->mtmUser->hasRole('Super-Admin'))
+            abort(404);
+
         $data = $this->className::find($id);
         if(!$data)
             abort(404);
@@ -177,6 +203,9 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function update(Request $request, $id)
     {
+        if(!$this->mtmUser->hasPermissionTo('edit '.Str::lower($this->modelName)) && !$this->mtmUser->hasRole('Super-Admin'))
+            abort(404);
+
         $request->validate([
 
         ]);
@@ -212,6 +241,9 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function destroy($id)
     {
+        if(!$this->mtmUser->hasPermissionTo('delete '.Str::lower($this->modelName)) && !$this->mtmUser->hasRole('Super-Admin'))
+            abort(404);
+
         $data = $this->className::find($id)->delete();
         return redirect()->route($this->resource['route_prefix'] . '.index')->with('status', 'Resource Delete Successfully');
     }
@@ -278,6 +310,9 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function cloning($id)
     {
+        if(!$this->mtmUser->hasPermissionTo('edit '.Str::lower($this->modelName)) && !$this->mtmUser->hasRole('Super-Admin'))
+            abort(404);
+
         $data = $this->className::find($id)->replicate()->save();
         return redirect()->route($this->resource['route_prefix'] . '.index')->with('status', 'Cloning successfully');
     }
