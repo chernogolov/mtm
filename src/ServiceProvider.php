@@ -2,6 +2,7 @@
 
 namespace Chernogolov\Mtm;
 
+use Chernogolov\Mtm\Models\Options;
 use Chernogolov\Mtm\View\MtmLayout;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
@@ -13,6 +14,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     public function boot()
     {
+        // Implicitly grant "Super-Admin" role all permission checks using can()
+        Gate::before(function ($user, $ability) {
+            if ($user->hasRole('Super-Admin')) {
+                return true;
+            }
+        });
+
         $this->publishes([
             __DIR__.'/../config/mtm.php' => config_path('mtm.php'),
         ]);
@@ -29,12 +37,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->loadViewsFrom(__DIR__ . '/Views', 'mtm');
         }
 
-        if(is_dir(__DIR__ . '/Translations')) {
-            $this->loadTranslationsFrom(__DIR__.'/Translations', 'mtm');
-        }
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'mtm');
+        $this->loadJsonTranslationsFrom(__DIR__.'/../lang');
+        $this->publishes([
+            __DIR__.'/../lang' => $this->app->langPath('vendor/mtm'),
+        ]);
 
         $this->publishes([
             __DIR__.'/Assets' => public_path('vendor/mtm'),
+            __DIR__.'/../lang' => $this->app->langPath('vendor/mtm'),
         ], 'public');
 //
 //        Gate::define('view-admin', function ($user) {
@@ -45,8 +56,14 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 //            return RegsUsers::where([['user_id', '=', $user->id],['view', '=', 1]])->first();
 //        });
 
-        $resources = Resource::all();
-        View::share('resources', $resources);
+        try {
+            $resources = Resource::all();
+            View::share('resources', $resources);
+        } catch (\Exception $e) {
+        }
+
+        $options = Options::getOptions();
+        View::share('options', $options);
 
         Blade::component('mtm-layout', MtmLayout::class);
         Blade::componentNamespace('Chernogolov\\Mtm\\Components', 'mtmcom');
