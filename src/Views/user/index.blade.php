@@ -17,13 +17,15 @@
                     @endif
 
                     <div class="mt-1 mb-4 flex justify-between">
-                        @if($mtmUser->hasPermissionTo('create '.Str::lower($res['model_name'])) || $mtmUser->hasRole('Super-Admin'))
-                            <a href="{{ route($res['route_prefix'] . '.create') }}">
-                                <x-primary-button>
-                                    {{ __('Add') }}
-                                </x-primary-button>
-                            </a>
-                        @endif
+                        <div>
+                            @if($mtmUser->hasPermissionTo('create '.Str::lower($res['model_name'])) || $mtmUser->hasRole('Super-Admin'))
+                                <a href="{{ route($res['route_prefix'] . '.create') }}">
+                                    <x-primary-button>
+                                        {{ __('Add') }}
+                                    </x-primary-button>
+                                </a>
+                            @endif
+                        </div>
                         <select title="Количество записей на странице" class="inline-flex items-center pl-4 pr-8 py-2 border  rounded-md font-semibold text-sm  tracking-widest  transition ease-in-out duration-150" id="onPage" onchange="if (this.value) window.location.href= '{{route($res['route_prefix'] . '.index')}}?on_pages=' + this.value">
                             <option value="10" @if($on_pages == 10) selected @endif>10</option>
                             <option value="20" @if($on_pages == 20) selected @endif>20</option>
@@ -49,6 +51,9 @@
                                             {{$fields->$f_name->title}}
                                         </th>
                                     @endforeach
+                                    <th scope="col" class="px-6 py-3">
+                                        {{__('roles')}}
+                                    </th>
                                     <th scope="col" class="px-6 py-3">
 
                                     </th>
@@ -114,6 +119,11 @@
                         </div>
                         </td>
                         @endforeach
+                        <td>
+                            @foreach($item->getRoleNames() as $role)
+                                {{$role}}&nbsp;
+                            @endforeach
+                        </td>
                         <td class="px-6 py-4 flex justify-end">
                             <a class="mr-2" href="{{ route($res['route_prefix'] . '.show', $item->id) }}" title="{{__('Show')}}">
                                 <button type="button" class = "inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
@@ -142,15 +152,13 @@
                                     </a>
                                 @endforeach
                             @endif
-                            @if($mtmUser->hasPermissionTo('edit '.Str::lower($res['model_name'])) || $mtmUser->hasRole('Super-Admin'))
-                                @if(Route::has($res['route_prefix'] . '.clone'))
-                                    <a href="{{ route($res['route_prefix'] . '.clone', $item->id) }}" title="{{__('Clone')}}. Файлы не дублируются, при удалении в исходнике удалятся из клона!">
-                                        <button  type="button" class = "inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
-                                            </svg>
-                                        </button>
-                                    </a>
-                                @endif
+                            @if(Route::has($res['route_prefix'] . '.clone'))
+                                <a href="{{ route($res['route_prefix'] . '.clone', $item->id) }}" title="{{__('Clone')}}. Файлы не дублируются, при удалении в исходнике удалятся из клона!">
+                                    <button  type="button" class = "inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                                        </svg>
+                                    </button>
+                                </a>
                             @endif
                         </td>
                         </tr>
@@ -160,7 +168,7 @@
                 </div>
                 <div class="py-4 flex justify-between" x-data="">
                     @if($mtmUser->hasPermissionTo('delete '.Str::lower($res['model_name'])) || $mtmUser->hasRole('Super-Admin'))
-                        <x-primary-button name="delete_selected" value="1" :onsubmit="return confirm('{{ trans('are You Sure ? ') }}');">
+                        <x-primary-button name="delete_selected" value="1">
                             {{__('Delete selected')}}
                         </x-primary-button>
                     @endif

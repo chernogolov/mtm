@@ -363,7 +363,29 @@
                                     </div>
                                 </div>
                                 <div x-show="currentTab === 'access'" class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
-                                    {{__('Access')}}
+                                    <div class="pb-6">
+                                        {{__('Access')}}
+                                    </div>
+                                    @foreach(\Spatie\Permission\Models\Permission::where('name', 'like', '%'.Str::lower($resource->model_name).'%')->get() as $permission)
+                                        <div class="mb-6">
+                                            <div class="flex">
+                                                <label class="text-gray-700 w-1/3">
+                                                    {{$permission['name']}}
+                                                </label>
+                                                <div class="w-2/3">
+                                                    <select multiple="multiple" name="permissions[{{$permission['name']}}][]" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" >
+                                                        <option value="">{{__(' No roles')}}</option>
+                                                        @foreach(\Spatie\Permission\Models\Role::all() as $role)
+                                                            <option value="{{$role['name']}}" @if($permission->hasRole($role['name'])) selected @endif>{{$role['name']}}</option>
+                                                        @endforeach
+                                                    </select>
+{{--                                                    @error($key)--}}
+{{--                                                    <div class="text-sm text-red-600">{{ $message }}</div>--}}
+{{--                                                    @enderror--}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
                                 <div class="flex justify-between">
                                     <a href="{{route('resources.index')}}">

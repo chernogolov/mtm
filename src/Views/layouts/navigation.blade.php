@@ -1,3 +1,4 @@
+@php $mtmUser = \Chernogolov\Mtm\Models\User::find(auth()->user()->id) @endphp
 <nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -6,7 +7,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                        <img class="size-10" src="{{asset($options['logo'])}}" alt="{{ $options['sitename'] }}" title="{{ $options['sitename'] }}">
                     </a>
                 </div>
 
@@ -16,9 +17,11 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     @foreach($resources as $res => $data)
-                        <x-nav-link :href="route($data['route_prefix'].'.index')" :active="request()->routeIs($data['route_prefix'].'.index')">
-                            {{ __($data['name']) }}
-                        </x-nav-link>
+                        @if($mtmUser->hasPermissionTo('list '.Str::lower($data['model_name'])) || $mtmUser->hasRole('Super-Admin'))
+                            <x-nav-link :href="route($data['route_prefix'].'.index')" :active="request()->routeIs($data['route_prefix'].'.index')">
+                                {{ __($data['name']) }}
+                            </x-nav-link>
+                        @endif
                     @endforeach
                 </div>
             </div>
@@ -39,13 +42,17 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('resources.index')">
-                            {{ __('Resources') }}
-                        </x-dropdown-link>
-                        <x-dropdown-link :href="route('profile.edit')">
+                        @if(\Chernogolov\Mtm\Models\User::find(auth()->user()->id)->hasRole('Super-Admin') || \Chernogolov\Mtm\Models\User::get()->count() == 1)
+                            <x-dropdown-link :href="route('resources.index')">
+                                {{ __('Resources') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('options')">
+                                {{ __('Options') }}
+                            </x-dropdown-link>
+                        @endif
+                        <x-dropdown-link :href="route('myprofile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
-
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
