@@ -7,6 +7,7 @@ MultiTool Manager - Laravel admin panel
 2. php artisan breeze:install
 3. php artisan migrate
 4. php artisan vendor:publish --tag=public --force
+5. remove welcome and dashboard routes form routes/web.php
 
 #Usage
 
