@@ -3,9 +3,8 @@ MultiTool Manager - Laravel admin panel
 
 #Installation
 
-1. Install and setup Laravel Breeze
-2. composer require chernogolov/mtm
-3. php artisan vendor:publish --tag=public --force
+1. composer require chernogolov/mtm
+2. php artisan vendor:publish --tag=public --force
 
 #Usage
 
