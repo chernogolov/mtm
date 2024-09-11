@@ -62,8 +62,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         } catch (\Exception $e) {
         }
 
-        $options = Options::getOptions();
-        View::share('options', $options);
+        try {
+            $options = Options::getOptions();
+            View::share('options', $options);
+        } catch (\Exception $e) {
+        }
 
         Blade::component('mtm-layout', MtmLayout::class);
         Blade::componentNamespace('Chernogolov\\Mtm\\Components', 'mtmcom');
