@@ -61,6 +61,7 @@
                                                 </label>
                                                 <div class="w-2/3">
                                                     <select multiple="multiple" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" name="roles[]">
+                                                        <option value="" >No roles</option>
                                                         @foreach(\Spatie\Permission\Models\Role::all() as $role)
                                                             <option value="{{$role['name']}}" @if($data->hasRole($role['name'])) selected @endif>{{$role['name']}}</option>
                                                         @endforeach
