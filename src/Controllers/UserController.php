@@ -11,9 +11,6 @@ class UserController extends CrudBaseController
     public function __construct()
     {
         parent::__construct();
-
-        if(!$res)
-            abort(404);
     }
 
     /**
