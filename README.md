@@ -5,9 +5,10 @@ MultiTool Manager - Laravel admin panel
 
 1. composer require chernogolov/mtm
 2. php artisan breeze:install
-3. php artisan migrate
+3. php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
 4. php artisan vendor:publish --tag=public --force
-5. remove welcome and dashboard routes form routes/web.php
+5. php artisan migrate
+7. remove welcome and dashboard routes form routes/web.php
 
 #Usage
 
