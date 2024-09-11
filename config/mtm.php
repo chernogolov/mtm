@@ -33,4 +33,11 @@ return [
         'catalog_fields' => ['name', 'model_name', 'route_prefix', 'view_prefix'],
 
     ],
+    'options' => [
+        'sitename'          => 'Новый веб сервис на Multi Tool Manager',
+        'description'       => 'Описание веб сервиса',
+        'background'        => '/vendor/mtm/images/bg.jpg',
+        'favicon'           => '/vendor/mtm/images/mtm.svg',
+        'logo'              => '/vendor/mtm/images/mtm.svg'
+    ]
 ];
