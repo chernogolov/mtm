@@ -16,11 +16,11 @@ class Options extends Model
     public static function getOptions()
     {
         $default = config('mtm.options');
-        $db = [];
-
+        
         try {
             $db = Self::all('name', 'value')->keyBy('name');
         } catch (\Exception $e) {
+            $db = [];
         }
 
         $options = [];
