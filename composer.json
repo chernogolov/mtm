@@ -15,7 +15,9 @@
         "laravel/framework": "^11.0",
         "maatwebsite/excel": "^3.1",
         "phpoffice/phpword": "^1.2",
-        "tonysm/rich-text-laravel": "^3.1"
+        "tonysm/rich-text-laravel": "^3.1",
+        "spatie/laravel-permission": "^6.9",
+        "laravel/breeze": "^2.1"
     },
     "version": "1.4",
     "autoload": {
