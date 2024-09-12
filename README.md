@@ -10,6 +10,11 @@ MultiTool Manager - Laravel admin panel
 5. php artisan migrate
 7. remove welcome and dashboard routes form routes/web.php
 
+#Usage
+1. Create models
+2. Add resources in /resources
+3. Set up resources 
+
 Example to Post resource:
 1. php artisan make:model Post -mc
 10. add resource route routes/web.php Route::resource('post', PostController::class)->middleware(['web', 'auth', 'verified']);
@@ -29,8 +34,5 @@ class PostController extends CrudBaseController{
 }
 ```
     
-#Usage
 
-1. Create models
-2. Add resources in /resources
-3. Set up resources 
+
