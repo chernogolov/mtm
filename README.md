@@ -13,7 +13,7 @@ MultiTool Manager - Laravel admin panel
 9. add resource route routes/web.php Route::resource('ResourceName', HouseController::class)->middleware(['web', 'auth', 'verified']);
 11. add to controller
 
-<code>
+```rb
 namespace App\Http\Controllers;
 
 use Chernogolov\Mtm\Controllers\CrudBaseController;
@@ -25,7 +25,7 @@ class HouseController extends CrudBaseController{
       parent::__construct();
    }
 }
-</code>
+```
     
 #Usage
 
