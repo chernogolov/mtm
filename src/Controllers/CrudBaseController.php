@@ -29,14 +29,14 @@ class CrudBaseController extends \App\Http\Controllers\Controller
         /** Check user permissions */
         $this->mtmUser = User::find(Auth::user()->id);
         View::share('mtmUser', $this->mtmUser);
-        if(!$this->mtmUser->hasPermissionTo('list '.Str::lower($this->modelName)) && !$this->mtmUser->hasRole('Super-Admin'))
+        if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('list '.Str::lower($this->modelName)))
             abort(404);
 
         /** Get resource data from database */
         $this->resource = Resource::where('model_name', $this->modelName)->first();
 
         /** Generate model name */
-        $this->className = 'Chernogolov\Mtm\Models\\' . $this->modelName;
+        $this->className = '\App\Models\\' . $this->modelName;
 
         /** Set resource settings from string */
         $this->resource['editable_fields'] = explode(',', $this->resource['editable_fields']);
@@ -108,7 +108,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function create()
     {
-        if(!$this->mtmUser->hasPermissionTo('create '.Str::lower($this->modelName)) && !$this->mtmUser->hasRole('Super-Admin'))
+        if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('create '.Str::lower($this->modelName)))
             abort(404);
 
         $fields = collect([]);
@@ -134,7 +134,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function store(Request $request)
     {
-        if(!$this->mtmUser->hasPermissionTo('create '.Str::lower($this->modelName)) && !$this->mtmUser->hasRole('Super-Admin'))
+        if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('create '.Str::lower($this->modelName)))
             abort(404);
 
         $request->validate([
@@ -162,7 +162,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function show($id)
     {
-        if(!$this->mtmUser->hasPermissionTo('list '.Str::lower($this->modelName)) && !$this->mtmUser->hasRole('Super-Admin'))
+        if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('list '.Str::lower($this->modelName)))
             abort(404);
 
         $data = $this->className::find($id);
@@ -183,7 +183,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function edit($id)
     {
-        if(!$this->mtmUser->hasPermissionTo('edit '.Str::lower($this->modelName)) && !$this->mtmUser->hasRole('Super-Admin'))
+        if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('edit '.Str::lower($this->modelName)))
             abort(404);
 
         $data = $this->className::find($id);
@@ -203,7 +203,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function update(Request $request, $id)
     {
-        if(!$this->mtmUser->hasPermissionTo('edit '.Str::lower($this->modelName)) && !$this->mtmUser->hasRole('Super-Admin'))
+        if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('edit '.Str::lower($this->modelName)))
             abort(404);
 
         $request->validate([
@@ -241,7 +241,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function destroy($id)
     {
-        if(!$this->mtmUser->hasPermissionTo('delete '.Str::lower($this->modelName)) && !$this->mtmUser->hasRole('Super-Admin'))
+        if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('delete '.Str::lower($this->modelName)))
             abort(404);
 
         $data = $this->className::find($id)->delete();
@@ -310,7 +310,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function cloning($id)
     {
-        if(!$this->mtmUser->hasPermissionTo('edit '.Str::lower($this->modelName)) && !$this->mtmUser->hasRole('Super-Admin'))
+        if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('edit '.Str::lower($this->modelName)))
             abort(404);
 
         $data = $this->className::find($id)->replicate()->save();
