@@ -160,7 +160,7 @@
                 </div>
                 <div class="py-4 flex justify-between" x-data="">
                     @if($mtmUser->hasPermissionTo('delete '.Str::lower($res['model_name'])) || $mtmUser->hasRole('Super-Admin'))
-                        <x-primary-button name="delete_selected" value="1" :onsubmit="return confirm('{{ trans('are You Sure ? ') }}');">
+                        <x-primary-button name="delete_selected" value="1">
                             {{__('Delete selected')}}
                         </x-primary-button>
                     @endif
