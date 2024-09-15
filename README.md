@@ -1,25 +1,25 @@
 # MTM
-MultiTool Manager - Laravel admin panel
+MultiTool Manager - Многофункциональная админ панель для Laravel.
 
-#Installation
+#Установка
 
 1. composer require chernogolov/mtm
 2. php artisan breeze:install
 3. php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
 4. php artisan vendor:publish --tag=public --force
 5. php artisan migrate
-7. remove welcome and dashboard routes form routes/web.php
+7. Удалите welcome and dashboard маршруты form routes/web.php
 
 #Usage
-1. Create models
-2. Add resources in /resources
-3. Set up resources 
-
-Example to Post resource:
-1. php artisan make:model Post -mc
-10. add resource route routes/web.php Route::resource('post', PostController::class)->middleware(['web', 'auth', 'verified']);
-11. add to controller
-
+1. Создайте миграцию, модель и контроллер
+```rb
+php artisan make:model Post -mc
+```
+2. Добавьте ресурс в маршруты routes/web.php
+```rb
+Route::resource('post', PostController::class)->middleware(['web', 'auth', 'verified']);
+```
+3. Наследуйте контроллер CrudBaseController для включения базового функционала.
 ```rb
 namespace App\Http\Controllers;
 
@@ -33,6 +33,8 @@ class PostController extends CrudBaseController{
    }
 }
 ```
+4. Настройте ресурс в панели управления.
+
     
 
 
