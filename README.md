@@ -10,7 +10,7 @@ MultiTool Manager - Многофункциональная админ панел
 5. php artisan migrate
 7. Удалите welcome and dashboard маршруты form routes/web.php
 
-#Usage
+#Использование
 1. Создайте миграцию, модель и контроллер
 ```rb
 php artisan make:model Post -mc
@@ -19,7 +19,7 @@ php artisan make:model Post -mc
 ```rb
 Route::resource('post', PostController::class)->middleware(['web', 'auth', 'verified']);
 ```
-3. Наследуйте контроллер CrudBaseController для включения базового функционала.
+3. Наследуйте контроллер CrudBaseController для включения базового функционала. Пример ниже:
 ```rb
 namespace App\Http\Controllers;
 
