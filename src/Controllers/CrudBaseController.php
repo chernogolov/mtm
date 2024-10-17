@@ -2,6 +2,7 @@
 
 namespace Chernogolov\Mtm\Controllers;
 
+use Chernogolov\Mtm\Imports\BaseImport;
 use Chernogolov\Mtm\Models\Resource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
@@ -52,11 +53,12 @@ class CrudBaseController extends \App\Http\Controllers\Controller
         $this->resource['orm_fields'] = $orm_fields;
 
         /** Delete unused fields */
-        unset($fields->id);
-        unset($fields->created_at);
-        unset($fields->updated_at);
+//        unset($fields->id);
+//        unset($fields->created_at);
+//        unset($fields->updated_at);
         $this->resource->fields = $fields;
 
+        View::share('title', $this->resource->name);
         View::share('res', $this->resource);
         View::share('fields', $fields);
     }
@@ -108,6 +110,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function create()
     {
+        View::share('title', __('Create') . ' ' . $this->resource->name);
         if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('create '.Str::lower($this->modelName)))
             abort(404);
 
@@ -162,6 +165,8 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function show($id)
     {
+        View::share('title', __('Show') . ' ' . $this->resource->name);
+
         if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('list '.Str::lower($this->modelName)))
             abort(404);
 
@@ -183,6 +188,8 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function edit($id)
     {
+        View::share('title', __('Edit') . ' ' . $this->resource->name);
+
         if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('edit '.Str::lower($this->modelName)))
             abort(404);
 
@@ -504,9 +511,22 @@ class CrudBaseController extends \App\Http\Controllers\Controller
     public function export(Request $request)
     {
         $data = $this->className::get();
+//        return view('mtm::crud_base.export', compact('data'));
         return Excel::download(new BaseExport($this->resource['view_prefix'], $this->resource, $data), strtolower(Str::plural($this->modelName)) . '-' . date('Y-m-d') . '.xlsx');
     }
 
+    /**
+     * Import resources from Excel
+     */
+    public function import(Request $request)
+    {
+        $data = $this->className::get();
+
+        $post_data = $request->all();
+        if (isset($post_data['file'])) {
+            Excel::import(new BaseImport($this->resource['view_prefix'], $this->resource, $data), $request->file('file'));
+        }
+    }
 
     /**
      * Return saved gallery data.

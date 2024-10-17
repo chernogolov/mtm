@@ -6,6 +6,7 @@ use Chernogolov\Mtm\Models\Resource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Chernogolov\Mtm\Models\User;
+use Illuminate\Support\Facades\View;
 
 class BaseController extends \App\Http\Controllers\Controller
 {
@@ -20,6 +21,7 @@ class BaseController extends \App\Http\Controllers\Controller
 
     public function dashboard()
     {
+        View::share('title', __('Dashboard'));
         return view('mtm::dashboard');
     }
 

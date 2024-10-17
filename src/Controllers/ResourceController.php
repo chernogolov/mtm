@@ -170,7 +170,7 @@ class ResourceController extends \App\Http\Controllers\Controller
             }
         }
 
-
+        $res->ordering              = $request['data']['ordering'];
         $res->name                  = $request['data']['name'];
         $res->one_name              = $request['data']['one_name'];
         $res->route_prefix          = $request['data']['route_prefix'];
@@ -250,6 +250,6 @@ class ResourceController extends \App\Http\Controllers\Controller
         $c_name = 'App\Models\\' . $resource->model_name;
         $c_name::query()->delete();
 
-        return redirect(route('mtm::resources.edit', ['resource' => $id]));
+        return redirect(route('resources.edit', ['resource' => $id]));
     }
 }
