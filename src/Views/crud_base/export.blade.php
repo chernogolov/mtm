@@ -2,7 +2,7 @@
     <thead>
     <tr>
         @foreach($res->export_fields as $k)
-            <th class="bg-green-100 " style="@if(in_array($res->fields->$k->type, ['gallery', 'rich_text', 'files'])) width: 500px; @else width:100px; @endif " ><strong>{{$res->fields->$k->title}}</strong></th>
+            <th class="bg-green-100 " style="@if(in_array($res->fields->$k->type, ['gallery', 'rich_text', 'files'])) width: 500px; @else width:100px; @endif " ><strong>{{$k}}</strong></th>
         @endforeach
     </tr>
     </thead>
@@ -35,7 +35,7 @@
                             @endforeach
                         @endif
                     @else
-                        {{$item->$key}}
+                        {{strval($item->$key)}}
                     @endif
                 </td>
                 @endforeach

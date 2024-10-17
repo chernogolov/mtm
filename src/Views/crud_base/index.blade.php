@@ -4,7 +4,6 @@
             {{ __($res['name']) }}
         </h2>
     </x-slot>
-
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
@@ -102,11 +101,23 @@
                                                 @elseif($fields->$f_name->type == 'text_editor')
                                                     {{Str::words(strip_tags($item->$f_name), 10)}}
                                                 @elseif($fields->$f_name->type == 'orm')
-                                                    @foreach($item->$f_name as $v)
-                                                        <a class="text-sm ml-1 py-2" href="{{ route($res['route_prefix'] . '.show', $item->id) }}#{{$f_name}}">
-                                                            #{{$v->id}}@if(!$loop->last), @endif
-                                                        </a>
-                            @endforeach
+                                                        @if(isset($item->$f_name->id))
+                                                            @php $ext = json_decode($fields->$f_name->ext); @endphp
+                                                            @if(isset($ext->fields))
+                                                                @foreach($ext->fields as $key => $value)
+                                                                    {{$item->$f_name->$key}}&nbsp;
+                                                                @endforeach
+                                                            @else
+                                                                {{__('add filed to ext')}}
+                                                            @endif
+                                                        @else
+                                                            @foreach($item->$f_name as $v)
+                                                                <a class="text-sm ml-1 py-2" href="{{ route($res['route_prefix'] . '.show', $item->id) }}#{{$f_name}}">
+                                                                    #{{$v->id}}@if(!$loop->last), @endif
+                                                                </a>
+                                                            @endforeach
+                                                        @endif
+
                             @else
                                 {{$item->$f_name}}
                             @endif
@@ -176,8 +187,24 @@
                 <div class="py-4">
                     {{ $items->links() }}
                 </div>
-
                 </form>
+                @if($mtmUser->hasPermissionTo('edit '.Str::lower($res['model_name'])) || $mtmUser->hasRole('Super-Admin'))
+                    @if(Route::has($res['route_prefix'] . '.import') && isset($res->export_fields) && count($res->export_fields) > 1)
+                        <br>
+                        <hr>
+                        <br>
+                        <div class="py-4  justify-between w-100" x-data="">
+                            <form method="POST" id="import_form" class="form-inline flex justify-between pb-6" action="{{ route($res['route_prefix'] . '.import') }}" enctype="multipart/form-data">
+                                @csrf
+                                @method('get')
+                                <input type="file" name="file" class="block w-full mt-1 rounded-md mx-4"  form="import_form" required="required"/>
+                                <x-primary-button type="submit" form="import_form">
+                                    Загрузить&nbsp;XLS
+                                </x-primary-button>
+                            </form>
+                        </div>
+                    @endif
+                @endif
             </div>
         </div>
     </div>

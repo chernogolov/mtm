@@ -56,11 +56,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 //            return RegsUsers::where([['user_id', '=', $user->id],['view', '=', 1]])->first();
 //        });
 
-        try {
-            $resources = Resource::all();
-            View::share('resources', $resources);
-        } catch (\Exception $e) {
-        }
+        $resources = Resource::orderBy('ordering')->get();
+        View::share('resources', $resources);
 
         try {
             $options = Options::getOptions();

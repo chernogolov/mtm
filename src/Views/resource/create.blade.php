@@ -39,6 +39,11 @@
                                 <div x-show="currentTab === 'data'" class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
                                     <div class="mb-6">
                                         <div >
+                                            <x-input-label for="ordering" :value="__('Order')" />
+                                            <x-text-input id="ordering" name="data[ordering]" form="data-form" type="text" class="mt-1 block w-full" :value="$resource->ordering" required autofocus autocomplete="ordering" />
+                                            <x-input-error class="mt-2" :messages="$errors->get('ordering')" />
+                                        </div>
+                                        <div >
                                             <x-input-label for="name" :value="__('Name')" />
                                             <x-text-input id="name" name="data[name]" form="data-form" type="text" class="mt-1 block w-full" :value="Str::plural($name)" required autofocus autocomplete="name" />
                                             <x-input-error class="mt-2" :messages="$errors->get('name')" />

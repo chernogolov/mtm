@@ -28,6 +28,9 @@
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">
+                                            {{__('Order')}}
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
                                             {{__('Model')}}
                                         </th>
                                         <th scope="col" class="px-6 py-3">
@@ -49,6 +52,11 @@
                                         @php $ma = explode('\\', $model) @endphp
                                         @php $mn = array_pop($ma) @endphp
                                         <tr>
+                                            <td class="px-6 py-3">
+                                                @if(isset($items[$mn]))
+                                                    {{$items[$mn]->ordering}}
+                                                @endif
+                                            </td>
                                             <td class="px-6 py-3">
                                                 {{$model}}
                                             </td>
