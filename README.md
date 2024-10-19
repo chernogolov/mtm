@@ -10,6 +10,22 @@ MultiTool Manager - Многофункциональная админ панел
 5. php artisan migrate
 7. Удалите welcome and dashboard маршруты form routes/web.php
 8. Запустите npm run build
+9. Отредактируйте модель User.
+```rb
+namespace App\Models;
+
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+**use Spatie\Permission\Traits\HasRoles;**
+use Illuminate\Notifications\Notifiable;
+
+class User extends Authenticatable
+{
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory, Notifiable, **HasRoles**;
+```
+11.   следующий код: use Spatie\Permission\Traits\HasRoles;
 
 #Использование
 1. Создайте миграцию, модель и контроллер
