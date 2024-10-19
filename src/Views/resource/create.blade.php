@@ -40,7 +40,7 @@
                                     <div class="mb-6">
                                         <div >
                                             <x-input-label for="ordering" :value="__('Order')" />
-                                            <x-text-input id="ordering" name="data[ordering]" form="data-form" type="text" class="mt-1 block w-full" :value="$resource->ordering" required autofocus autocomplete="ordering" />
+                                            <x-text-input id="ordering" name="data[ordering]" form="data-form" type="text" class="mt-1 block w-full" required autofocus autocomplete="ordering" />
                                             <x-input-error class="mt-2" :messages="$errors->get('ordering')" />
                                         </div>
                                         <div >
