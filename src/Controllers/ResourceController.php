@@ -33,7 +33,7 @@ class ResourceController extends \App\Http\Controllers\Controller
      */
     public function index(Request $request)
     {
-        //
+        View::share('title', __('Resources'));
         $post_data = $request->all();
         if(isset($post_data['delete']) && !empty($post_data['delete']))
         {
@@ -56,7 +56,7 @@ class ResourceController extends \App\Http\Controllers\Controller
      */
     public function create(Request $request)
     {
-        //
+        View::share('title', __('Create resource'));
         $fields = collect([]);
         $pd = [];
 //        foreach ($this->resource['editable_fields'] as $f)
@@ -130,9 +130,7 @@ class ResourceController extends \App\Http\Controllers\Controller
      */
     public function edit($id)
     {
-        //
-//        $r = \Spatie\Permission\Models\Permission::where('name', 'like', '%'.Str::lower('User').'%')->get();
-//        dd($r);
+        View::share('title', __('Edit resource'));
         $resource = Resource::where('id', $id)->first();
         $fields = Schema::getColumnListing(Str::plural(Str::lower($resource->model_name)));
         return view('mtm::resource.edit', compact('resource', 'fields'));
