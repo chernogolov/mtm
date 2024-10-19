@@ -9,6 +9,7 @@ MultiTool Manager - Многофункциональная админ панел
 4. php artisan vendor:publish --tag=public --force
 5. php artisan migrate
 7. Удалите welcome and dashboard маршруты form routes/web.php
+8. Запустите npm run build
 
 #Использование
 1. Создайте миграцию, модель и контроллер
