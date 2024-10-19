@@ -95,6 +95,7 @@ class ResourceController extends \App\Http\Controllers\Controller
         {
             if(!$users->first()->hasRole('Super-Admin'))
             {
+                $sa_role = Role::create(['name' => 'Super-Admin']);
                 $users->first()->assignRole('Super-Admin');
             }
         }
