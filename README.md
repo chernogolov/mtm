@@ -9,8 +9,7 @@ MultiTool Manager - Многофункциональная админ панел
 4. php artisan vendor:publish --tag=public --force
 5. php artisan migrate
 7. Удалите welcome and dashboard маршруты form routes/web.php
-8. Запустите npm run build
-9. Отредактируйте модель User - Добавьте трейт HasRoles
+8. Отредактируйте модель User - Добавьте трейт HasRoles
 ```rb
 namespace App\Models;
 
@@ -27,7 +26,7 @@ class User extends Authenticatable
 ...
 }
 ```
-11.   следующий код: use Spatie\Permission\Traits\HasRoles;
+9. Запустите npm run build
 
 #Использование
 1. Создайте миграцию, модель и контроллер
