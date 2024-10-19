@@ -88,11 +88,6 @@
                                             <x-text-input id="view_fields" name="data[view_fields]" form="data-form" type="text" class="mt-1 block w-full" :value="implode(',', $ff)" required autofocus autocomplete="view_fields" />
                                             <x-input-error class="mt-2" :messages="$errors->get('data.view_fields')" />
                                         </div>
-                                        <div class="mt-4">
-                                            <x-input-label for="export_fields" :value="__('Export fields')" />
-                                            <x-text-input id="export_fields" name="data[export_fields]" form="data-form" type="text" class="mt-1 block w-full" :value="implode(',', $ff)" autofocus autocomplete="export_fields" />
-                                            <x-input-error class="mt-2" :messages="$errors->get('data.export_fields')" />
-                                        </div>
                                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                             <tr>
