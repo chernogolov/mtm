@@ -71,6 +71,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         }
 
         Blade::component('mtm-layout', MtmLayout::class);
+        Blade::component('mtm-trix-input', TrixInput::class);
         Blade::componentNamespace('Chernogolov\\Mtm\\Components', 'mtmcom');
 
 
