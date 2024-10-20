@@ -120,6 +120,7 @@
                                             <x-input-label for="editable_fields" :value="__('editable fields')" />
                                             <x-text-input id="editable_fields" name="data[editable_fields]" form="data-form" type="text" class="mt-1 block w-full" :value="$resource->editable_fields" required autofocus autocomplete="editable_fields" />
                                             <x-input-error class="mt-2" :messages="$errors->get('data.editable_fields')" />
+                                            <span>protected $fillable = [@foreach(explode(',', $resource->editable_fields) as $field) '{{$field}}', @endforeach];</span>
                                         </div>
                                         <div class="mt-4">
                                             <x-input-label for="export_fields" :value="__('export fields')" />
