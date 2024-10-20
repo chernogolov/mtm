@@ -27,6 +27,10 @@ class User extends Authenticatable
 }
 ```
 9. Запустите npm run build
+10. Установите Trix Editor для работы с редактором
+```rb
+php artisan richtext:install
+```
 
 #Использование
 1. Создайте миграцию, модель и контроллер
