@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Blade;
 use Chernogolov\Mtm\Models\Resource;
 use Illuminate\Support\Facades\View;
+use Chernogolov\Mtm\View\TrixInput;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
