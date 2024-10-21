@@ -71,6 +71,7 @@
                                     </div>
                                 </div>
                                 <div x-show="currentTab === 'fields'" class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
+                                    <span>{{__('Add fields rating for DESC ordering and ordering for ASC ordering')}}</span>
                                     <div class="relative overflow-x-auto">
                                         @php $ff = $fields; $ff = array_diff($fields, array('id', 'created_at', 'updated_at')); @endphp
                                         <div class="mt-4">

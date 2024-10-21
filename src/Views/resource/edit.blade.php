@@ -101,6 +101,8 @@
                                     </div>
                                 </div>
                                 <div x-show="currentTab === 'fields'" class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
+                                    <span>{{__('Add fields rating for DESC ordering and ordering for ASC ordering')}}</span>
+
                                     <div class="relative overflow-x-auto">
                                         <div class="mt-4">
                                             <x-input-label for="all_fields" :value="__('all fields')"/>
@@ -130,6 +132,7 @@
 
 
                                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+
                                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                             <tr>
                                                 <th scope="col" class="px-6 py-3 w-1/12">
@@ -140,6 +143,9 @@
                                                 </th>
                                                 <th scope="col" class="px-6 py-3 w-3/12">
                                                     {{__('Type')}}
+                                                </th>
+                                                <th scope="col" class="px-6 py-3 w-3/12">
+                                                    {{__('Sort')}}
                                                 </th>
                                                 <th scope="col" class="px-6 py-3 w-2/12">
                                                     {{__('Template')}}
@@ -179,6 +185,10 @@
                                                         <option value="passwd" @if($field->type == 'passwd') selected @endif>{{__('Password')}}</option>
                                                         </select>
                                                         <x-input-error class="mt-2" :messages="$errors->get($key.'title')" />
+                                                    </td>
+                                                    <td class="px-6 py-4">
+                                                        <x-text-input id="{{$key}}_sort" name="fields[{{$key}}][template]" form="data-form" type="text" class="mt-1 block w-full" :value="$field->template" />
+                                                        <x-input-error class="mt-2" :messages="$errors->get($key.'template')" />
                                                     </td>
                                                     <td class="px-6 py-4">
                                                         <x-text-input id="{{$key}}_template" name="fields[{{$key}}][template]" form="data-form" type="text" class="mt-1 block w-full" :value="$field->template" />
