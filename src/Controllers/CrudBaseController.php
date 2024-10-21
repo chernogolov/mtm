@@ -22,6 +22,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
 {
     private $order_by = 'created_at';
     private $order_by_direction = 'desc';
+    private $on_pages = 10;
 
     public $resource = [];
     public $modelName;
@@ -77,12 +78,13 @@ class CrudBaseController extends \App\Http\Controllers\Controller
     {
         $resource = $this->resource;
 
+        /** items ordering */
         $this->get_order($request);
         $itm = $this->className::orderBy($this->order_by, $this->order_by_direction);
 
         /** items on page from session */
-        if (isset($post_data['on_pages']))
-            session(['on_pages' => $post_data['on_pages']]);
+        $this->get_items_on_page($request);
+
 
         /** Add related data in resource */
         if (count($this->resource['orm_fields']) > 0)
@@ -98,15 +100,14 @@ class CrudBaseController extends \App\Http\Controllers\Controller
             }
         }
 
-        $on_pages = $request->session()->get('on_pages', 10);
-        $items = $itm->paginate($on_pages);
+        $items = $itm->paginate($this->on_pages);
 
         $view = 'mtm::' . $this->resource['view_prefix'] . '.index';
         if(!view()->exists($view)){
             $view = 'mtm::crud_base.index';
         }
 
-        return view($view, compact('items', 'resource', 'on_pages'));
+        return view($view, compact('items', 'resource'));
     }
 
     /**
@@ -602,5 +603,20 @@ class CrudBaseController extends \App\Http\Controllers\Controller
 
         View::share('order_by', $this->order_by);
         View::share('order_by_direction', $this->order_by_direction);
+
+    }
+
+    public function get_items_on_page($request)
+    {
+        if (isset($request['on_pages']))
+        {
+            $request->session()->put('on_pages', $request['on_pages']);
+            $this->on_pages = $request['on_pages'];
+
+        }
+
+        $this->on_pages = $request->session()->get('on_pages');
+
+        View::share('on_pages', $this->on_pages);
     }
 }
