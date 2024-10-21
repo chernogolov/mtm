@@ -599,5 +599,8 @@ class CrudBaseController extends \App\Http\Controllers\Controller
 
         if(isset($request['order_by_direction']))
             $this->order_by_direction = $request['order_by_direction'];
+
+        View::share('order_by', $this->order_by);
+        View::share('order_by_direction', $this->order_by_direction);
     }
 }
