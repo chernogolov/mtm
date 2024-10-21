@@ -20,6 +20,9 @@ use Illuminate\Support\Str;
 
 class CrudBaseController extends \App\Http\Controllers\Controller
 {
+    private $order_by = 'created_at';
+    private $order_by_direction = 'desc';
+
     public $resource = [];
     public $modelName;
     public $className;
@@ -73,7 +76,9 @@ class CrudBaseController extends \App\Http\Controllers\Controller
     public function index(Request $request)
     {
         $resource = $this->resource;
-        $itm = $this->className::latest();
+
+        $this->get_order($request);
+        $itm = $this->className::orderBy($this->order_by, $this->order_by_direction);
 
         /** items on page from session */
         if (isset($post_data['on_pages']))
@@ -567,5 +572,32 @@ class CrudBaseController extends \App\Http\Controllers\Controller
     public function store_user($request, $item, $key)
     {
         return Auth::user()->id;
+    }
+
+    public function get_order($request)
+    {
+        if(isset($this->resource->fields->rating))
+        {
+            $this->order_by = 'rating';
+            $this->order_by_direction = 'desc';
+        }
+
+        if(isset($this->resource->fields->ordering))
+        {
+            $this->order_by = 'rating';
+            $this->order_by_direction = 'asc';
+        }
+
+        if(isset($this->resource->order_by))
+            $this->order_by = $this->resource->order_by;
+
+        if(isset($this->resource->order_by_direction))
+            $this->order_by_direction = $this->resource->order_by_direction;
+
+        if(isset($request['order_by']))
+            $this->order_by = $request['order_by'];
+
+        if(isset($request['order_by_direction']))
+            $this->order_by_direction = $request['order_by_direction'];
     }
 }
