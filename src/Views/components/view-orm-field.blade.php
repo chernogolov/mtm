@@ -1,6 +1,6 @@
 @props(['data', 'value', 'name', 'object'])
 @php $ext = json_decode($data->ext) @endphp
-@php $resource = (object)\App\Models\Resource::where('model_name', ucfirst($name))->first(); @endphp
+@php $resource = (object)Chernogolov\Mtm\Models\Resource::where('model_name', ucfirst($name))->first(); @endphp
 
 <div class="flex gap-6">
     <a target="_blank" href="{{asset($name . '/create?' . strtolower($res->model_name) . '=' . $object->id)}}">
