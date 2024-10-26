@@ -8,7 +8,7 @@
 ])
 
 @php $ext = json_decode($data->ext) @endphp
-@php $resource = (object)\App\Models\Resource::where('model_name', ucfirst($name))->first(); @endphp
+@php $resource = (object)Chernogolov\Mtm\Models\Resource::where('model_name', ucfirst($name))->first(); @endphp
 
 @if(isset($ext->description))
     <div class="mb-2 flex">
