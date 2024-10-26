@@ -45,32 +45,8 @@
                                     </th>
                                     @foreach($resource['catalog_fields'] as $f_name)
                                         <th scope="col" class="px-6 py-3">
-                                            <div class="flex">
-                                                {{$fields->$f_name->title}}
-                                                @if(in_array($fields->$f_name->type, ['string', 'date', 'datetime', 'deadline', 'list', 'address', 'coords']))
-                                                    @if(isset($order_by) && $order_by == $f_name)
-                                                        <div class="text-black">
-
-                                                    @else
-                                                        <div class="text-gray-300">
-                                                    @endif
-                                                    @if(isset($order_by_direction) && $order_by_direction == 'DESC')
-                                                        <a href="{{route($res['route_prefix'] . '.index', ['order_by' => $f_name, 'order_by_direction' => 'ASC'])}}">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
-                                                            </svg>
-                                                        </a>
-                                                    @else
-                                                        <a href="{{route($res['route_prefix'] . '.index', ['order_by' => $f_name, 'order_by_direction' => 'DESC'])}}">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
-                                                            </svg>
-                                                        </a>
-                                                    @endif
-                                                    </div>
-                                                @endif
-                                            </div>
-                                       </th>
+                                            {{$fields->$f_name->title}}
+                                        </th>
                                     @endforeach
                                     <th scope="col" class="px-6 py-3">
 
@@ -96,13 +72,11 @@
                                                             @php $gallery = json_decode($item->$f_name) @endphp
                                                             @if(is_array($gallery) && isset($gallery[0]))
                                                                 @php $na = explode('/', $gallery[0]); $filename = array_pop($na); $t_name = implode('/', $na) . '/t_' . $filename @endphp
-                                                                <a class="text-sm ml-1 py-2" href="{{ route($res['route_prefix'] . '.show', $item->id) }}#{{$f_name}}">
-                                                                    <img
-                                                                            class="h-16 max-w-full rounded-lg cursor-pointer"
-                                                                            src="{{asset('storage' . $t_name)}}"
-                                                                            alt=""
-                                                                    >
-                                                                </a>
+                                                                <img
+                                                                        class="h-16 max-w-full rounded-lg cursor-pointer"
+                                                                        src="{{asset('storage' . $t_name)}}"
+                                                                        alt=""
+                                                                >
                                                 </div>
                                                 @if(count($gallery) > 1)
                                                     <a class="text-sm ml-1 py-2" href="{{ route($res['route_prefix'] . '.show', $item->id) }}#{{$f_name}}">
@@ -137,11 +111,13 @@
                                                                 {{__('add filed to ext')}}
                                                             @endif
                                                         @else
-                                                            @foreach($item->$f_name as $v)
-                                                                <a class="text-sm ml-1 py-2" href="{{ route($res['route_prefix'] . '.show', $item->id) }}#{{$f_name}}">
-                                                                    #{{$v->id}}@if(!$loop->last), @endif
-                                                                </a>
-                                                            @endforeach
+                                                            @if(is_array($item->$f_name))
+                                                                @foreach($item->$f_name as $v)
+                                                                    <a class="text-sm ml-1 py-2" href="{{ route($res['route_prefix'] . '.show', $item->id) }}#{{$f_name}}">
+                                                                        #{{$v->id}}@if(!$loop->last), @endif
+                                                                    </a>
+                                                                @endforeach
+                                                            @endif
                                                         @endif
 
                             @else
@@ -211,7 +187,7 @@
                     @endif
                 </div>
                 <div class="py-4">
-                    {{ $items->withQueryString()->links() }}
+                    {{ $items->links() }}
                 </div>
                 </form>
                 @if($mtmUser->hasPermissionTo('edit '.Str::lower($res['model_name'])) || $mtmUser->hasRole('Super-Admin'))
