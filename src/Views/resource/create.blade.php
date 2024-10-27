@@ -40,7 +40,7 @@
                                     <div class="mb-6">
                                         <div >
                                             <x-input-label for="ordering" :value="__('Order')" />
-                                            <x-text-input id="ordering" name="data[ordering]" form="data-form" type="text" class="mt-1 block w-full" required autofocus autocomplete="ordering" />
+                                            <x-text-input id="ordering" name="data[ordering]" form="data-form" type="text" class="mt-1 block w-full"  required autofocus autocomplete="ordering" />
                                             <x-input-error class="mt-2" :messages="$errors->get('ordering')" />
                                         </div>
                                         <div >
@@ -71,7 +71,6 @@
                                     </div>
                                 </div>
                                 <div x-show="currentTab === 'fields'" class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
-                                    <span>{{__('Add fields rating for DESC ordering and ordering for ASC ordering')}}</span>
                                     <div class="relative overflow-x-auto">
                                         @php $ff = $fields; $ff = array_diff($fields, array('id', 'created_at', 'updated_at')); @endphp
                                         <div class="mt-4">
@@ -88,6 +87,11 @@
                                             <x-input-label for="view_fields" :value="__('View fields')" />
                                             <x-text-input id="view_fields" name="data[view_fields]" form="data-form" type="text" class="mt-1 block w-full" :value="implode(',', $ff)" required autofocus autocomplete="view_fields" />
                                             <x-input-error class="mt-2" :messages="$errors->get('data.view_fields')" />
+                                        </div>
+                                        <div class="mt-4">
+                                            <x-input-label for="unique_fields" :value="__('Unique fields')" />
+                                            <x-text-input id="unique_fields" name="data[unique_fields]" form="data-form" type="text" class="mt-1 block w-full" :value="implode(',', $ff)" required autofocus autocomplete="unique_fields" />
+                                            <x-input-error class="mt-2" :messages="$errors->get('data.unique_fields')" />
                                         </div>
                                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
