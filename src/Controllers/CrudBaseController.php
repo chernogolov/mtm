@@ -22,7 +22,6 @@ class CrudBaseController extends \App\Http\Controllers\Controller
 {
     private $order_by = 'created_at';
     private $order_by_direction = 'desc';
-    private $on_pages = 10;
 
     public $resource = [];
     public $modelName;
@@ -78,13 +77,11 @@ class CrudBaseController extends \App\Http\Controllers\Controller
     {
         $resource = $this->resource;
 
-        /** items ordering */
         $this->get_order($request);
         $itm = $this->className::orderBy($this->order_by, $this->order_by_direction);
 
         /** items on page from session */
         $this->get_items_on_page($request);
-
 
         /** Add related data in resource */
         if (count($this->resource['orm_fields']) > 0)
@@ -100,14 +97,15 @@ class CrudBaseController extends \App\Http\Controllers\Controller
             }
         }
 
-        $items = $itm->paginate($this->on_pages);
+        $on_pages = $request->session()->get('on_pages', 10);
+        $items = $itm->paginate($on_pages);
 
         $view = 'mtm::' . $this->resource['view_prefix'] . '.index';
         if(!view()->exists($view)){
             $view = 'mtm::crud_base.index';
         }
 
-        return view($view, compact('items', 'resource'));
+        return view($view, compact('items', 'resource', 'on_pages'));
     }
 
     /**
@@ -235,7 +233,13 @@ class CrudBaseController extends \App\Http\Controllers\Controller
                 {
                     $r = $this->$f_name($request, $item, $key, $res);
                     if($r)
+                    {
+                        if($item->type == 'orm')
+                            $key = $key . '_id';
+
                         $res->$key = $r;
+                    }
+
                 }
                 else
                     $res->$key = $request[$key];
@@ -482,7 +486,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
     public function update_orm($request, $item, $key, $res)
     {
         $k = $key . '_id';
-        if(isset($res->$k))
+        if(isset($res->$k) || $res->$k == null)
             return $request[$key];
         else
         {
@@ -531,7 +535,6 @@ class CrudBaseController extends \App\Http\Controllers\Controller
         $post_data = $request->all();
         if (isset($post_data['file'])) {
             Excel::import(new BaseImport($this->resource['view_prefix'], $this->resource, $data), $request->file('file'));
-            return redirect()->route($this->resource['route_prefix'] . '.index')->with('status', 'Import successfully');
         }
     }
 
@@ -604,7 +607,6 @@ class CrudBaseController extends \App\Http\Controllers\Controller
 
         View::share('order_by', $this->order_by);
         View::share('order_by_direction', $this->order_by_direction);
-
     }
 
     public function get_items_on_page($request)
