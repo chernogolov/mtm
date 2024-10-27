@@ -129,7 +129,11 @@
                                             <x-text-input id="export_fields" name="data[export_fields]" form="data-form" type="text" class="mt-1 block w-full" :value="$resource->export_fields" autofocus autocomplete="export_fields" />
                                             <x-input-error class="mt-2" :messages="$errors->get('data.export_fields')" />
                                         </div>
-
+                                        <div class="mt-4">
+                                            <x-input-label for="unique_fields" :value="__('Unique fields')" />
+                                            <x-text-input id="unique_fields" name="data[unique_fields]" form="data-form" type="text" class="mt-1 block w-full" :value="$resource->unique_fields" required autofocus autocomplete="unique_fields" />
+                                            <x-input-error class="mt-2" :messages="$errors->get('data.unique_fields')" />
+                                        </div>
 
                                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
 
@@ -143,9 +147,6 @@
                                                 </th>
                                                 <th scope="col" class="px-6 py-3 w-3/12">
                                                     {{__('Type')}}
-                                                </th>
-                                                <th scope="col" class="px-6 py-3 w-3/12">
-                                                    {{__('Sort')}}
                                                 </th>
                                                 <th scope="col" class="px-6 py-3 w-2/12">
                                                     {{__('Template')}}
@@ -185,10 +186,6 @@
                                                         <option value="passwd" @if($field->type == 'passwd') selected @endif>{{__('Password')}}</option>
                                                         </select>
                                                         <x-input-error class="mt-2" :messages="$errors->get($key.'title')" />
-                                                    </td>
-                                                    <td class="px-6 py-4">
-                                                        <x-text-input id="{{$key}}_sort" name="fields[{{$key}}][template]" form="data-form" type="text" class="mt-1 block w-full" :value="$field->template" />
-                                                        <x-input-error class="mt-2" :messages="$errors->get($key.'template')" />
                                                     </td>
                                                     <td class="px-6 py-4">
                                                         <x-text-input id="{{$key}}_template" name="fields[{{$key}}][template]" form="data-form" type="text" class="mt-1 block w-full" :value="$field->template" />
