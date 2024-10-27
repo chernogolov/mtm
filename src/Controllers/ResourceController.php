@@ -177,6 +177,7 @@ class ResourceController extends \App\Http\Controllers\Controller
         $res->model_name            = $request['data']['model_name'];
         $res->catalog_fields        = $request['data']['catalog_fields'];
         $res->editable_fields       = $request['data']['editable_fields'];
+        $res->unique_fields         = $request['data']['unique_fields'];
         $res->fields                = $request['fields'];
         $res->form_fields           = $request['data']['form_fields'];
         $res->api_fields            = $request['data']['api_fields'];
