@@ -535,6 +535,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
         $post_data = $request->all();
         if (isset($post_data['file'])) {
             Excel::import(new BaseImport($this->resource['view_prefix'], $this->resource, $data), $request->file('file'));
+            return redirect()->route($this->resource['route_prefix'] . '.index')->with('status', 'Import successfully');
         }
     }
 
