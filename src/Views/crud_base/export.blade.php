@@ -45,6 +45,8 @@
                                 {{$v->id}}@if(!$loop->last), @endif
                             @endforeach
                         @endif
+                    @elseif($res->fields->$key->type == 'integer')
+                        {{floatval($item->$key)}}
                     @else
                         {{strval($item->$key)}}
                     @endif
