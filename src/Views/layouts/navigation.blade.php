@@ -17,7 +17,7 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     @foreach($resources as $res => $data)
-                        @if($mtmUser->hasPermissionTo('list '.Str::lower($data['model_name'])) || $mtmUser->hasRole('Super-Admin'))
+                        @if(Auth::user()->hasPermissionTo('list '.Str::lower($data['model_name'])) || $mtmUser->hasRole('Super-Admin'))
                             <x-nav-link :href="route($data['route_prefix'].'.index')" :active="request()->routeIs($data['route_prefix'].'.index')">
                                 {{ __($data['name']) }}
                             </x-nav-link>
