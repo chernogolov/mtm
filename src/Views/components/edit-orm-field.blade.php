@@ -8,6 +8,7 @@
 ])
 
 @php $ext = json_decode($data->ext) @endphp
+@if(isset($ext->resource)) @php $name = $ext->resource @endphp @endif
 @php $resource = (object)\Chernogolov\Mtm\Models\Resource::where('model_name', ucfirst($name))->first(); @endphp
 
 @if(isset($ext->description))
