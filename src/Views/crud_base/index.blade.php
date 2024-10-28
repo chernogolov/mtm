@@ -47,7 +47,7 @@
                                         <th scope="col" class="px-6 py-3">
                                             <div class="flex">
                                                 {{$fields->$f_name->title}}
-                                                @if(in_array($fields->$f_name->type, ['string', 'date', 'datetime', 'deadline', 'list', 'address', 'coords']))
+                                                @if(in_array($fields->$f_name->type, ['string', 'date', 'datetime', 'deadline', 'list', 'address', 'coords', 'integer']))
                                                     @if(isset($order_by) && $order_by == $f_name)
                                                         <div class="text-black">
 
@@ -103,65 +103,66 @@
                                                                             alt=""
                                                                     >
                                                                 </a>
-                                                </div>
-                                                @if(count($gallery) > 1)
-                                                    <a class="text-sm ml-1 py-2" href="{{ route($res['route_prefix'] . '.show', $item->id) }}#{{$f_name}}">
-                                                        <span >+{{count($gallery)-1}}</span>
-                                                    </a>
-                                                @endif
-                                                @endif
-                                                @elseif($fields->$f_name->type == 'files')
-                                                    @php $files = json_decode($item->$f_name) @endphp
-                                                    @if(is_array($files) && isset($files[0]))
-                                                        @if(count($files) > 1)
-                                                            <a class="text-sm ml-1 py-2" href="{{ route($res['route_prefix'] . '.show', $item->id) }}#{{$f_name}}">
-                                                                <span>{{count($files)}} шт.</span>
-                                                            </a>
-                                                        @endif
-                                                    @endif
-                                                @elseif($fields->$f_name->type == 'list')
-                                                    @php $ext = json_decode($fields->$f_name->ext); $list = []; $v = $item->$f_name @endphp
-                                                    @if(isset($ext->list))
-                                                        {{$ext->list->$v}}
-                                                    @endif
-                                                @elseif($fields->$f_name->type == 'text_editor')
-                                                    {{Str::words(strip_tags($item->$f_name), 10)}}
-                                                @elseif($fields->$f_name->type == 'orm')
-                                                    @if(isset($item->$f_name->id))
-                                                        @php $ext = json_decode($fields->$f_name->ext); @endphp
-                                                        @if(isset($ext->fields))
-                                                            @foreach($ext->fields as $key => $value)
-                                                                {{$item->$f_name->$key}}&nbsp;
-                                                            @endforeach
+                                                                </div>
+                                                                @if(count($gallery) > 1)
+                                                                    <a class="text-sm ml-1 py-2" href="{{ route($res['route_prefix'] . '.show', $item->id) }}#{{$f_name}}">
+                                                                        <span >+{{count($gallery)-1}}</span>
+                                                                    </a>
+                                                                @endif
+                                                             @endif
+                                                        @elseif($fields->$f_name->type == 'files')
+                                                            @php $files = json_decode($item->$f_name) @endphp
+                                                            @if(is_array($files) && isset($files[0]))
+                                                                @if(count($files) > 1)
+                                                                    <a class="text-sm ml-1 py-2" href="{{ route($res['route_prefix'] . '.show', $item->id) }}#{{$f_name}}">
+                                                                        <span>{{count($files)}} шт.</span>
+                                                                    </a>
+                                                                @endif
+                                                            @endif
+                                                        @elseif($fields->$f_name->type == 'list')
+                                                            @php $ext = json_decode($fields->$f_name->ext); $list = []; $v = $item->$f_name @endphp
+                                                            @if(isset($ext->list))
+                                                                {{$ext->list->$v}}
+                                                            @endif
+                                                        @elseif($fields->$f_name->type == 'text_editor')
+                                                            {{Str::words(strip_tags($item->$f_name), 10)}}
+                                                        @elseif($fields->$f_name->type == 'orm')
+                                                            @if(isset($item->$f_name->id))
+                                                                @php $ext = json_decode($fields->$f_name->ext); @endphp
+                                                                @if(isset($ext->fields))
+                                                                    @foreach($ext->fields as $key => $value)
+                                                                        {{$item->$f_name->$key}}&nbsp;
+                                                                    @endforeach
+                                                                @else
+                                                                    {{__('add filed to ext')}}
+                                                                @endif
+                                                            @else
+                                                                @if(is_array($item->$f_name))
+                                                                    @foreach($item->$f_name as $v)
+                                                                        <a class="text-sm ml-1 py-2" href="{{ route($res['route_prefix'] . '.show', $item->id) }}#{{$f_name}}">
+                                                                            #{{$v->id}}@if(!$loop->last), @endif
+                                                                        </a>
+                                                                    @endforeach
+                                                                @endif
+                                                            @endif
+                                                        @elseif($fields->$f_name->type == 'integer')
+                                                            <span class="whitespace-nowrap">{{number_format($item->$f_name, 0, ',', ' ')}}</span>
                                                         @else
-                                                            {{__('add filed to ext')}}
-                                                        @endif
-                                                    @else
-                                                        @if(is_array($item->$f_name))
-                                                            @foreach($item->$f_name as $v)
-                                                                <a class="text-sm ml-1 py-2" href="{{ route($res['route_prefix'] . '.show', $item->id) }}#{{$f_name}}">
-                                                                    #{{$v->id}}@if(!$loop->last), @endif
-                                                                </a>
-                                                            @endforeach
+                                                            {{$item->$f_name}}
                                                         @endif
                                                     @endif
-
-                            @else
-                                {{$item->$f_name}}
-                            @endif
-                            @endif
-                        </div>
-                        </td>
-                        @endforeach
-                        <td class="px-6 py-4 flex justify-end">
-                            <a class="mr-2" href="{{ route($res['route_prefix'] . '.show', $item->id) }}" title="{{__('Show')}}">
-                                <button type="button" class = "inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                    </svg>
-                                </button>
-                            </a>
+                                                </div>
+                                            </td>
+                                        @endforeach
+                                <td class="px-6 py-4 flex justify-end">
+                                    <a class="mr-2" href="{{ route($res['route_prefix'] . '.show', $item->id) }}" title="{{__('Show')}}">
+                                        <button type="button" class = "inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                            </svg>
+                                        </button>
+                                    </a>
                             @if($mtmUser->hasPermissionTo('edit '.Str::lower($res['model_name'])) || $mtmUser->hasRole('Super-Admin'))
                                 <a class="mr-2" href="{{ route($res['route_prefix'] . '.edit', $item->id) }}" title="{{__('Edit')}}">
                                     <button  type="button" class = "inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
