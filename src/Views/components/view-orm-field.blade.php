@@ -24,7 +24,11 @@
             @if(isset($ext->fields))
                 @foreach($ext->fields as $key => $itm)
                     <th scope="col" class="px-6 py-3">
+                        @if(isset($resource->fields->$key))
                         {{$resource->fields->$key->title}}
+                        @else
+                            {{dd('укажите ресурс для поля ' . $name)}}
+                        @endif
                     </th>
                 @endforeach
             @endif
