@@ -20,7 +20,7 @@ class BaseExport implements FromView
 
     public function view(): View
     {
-        $view = 'mtm::' . $this->prefix . '.export';
+        $view = $this->prefix . '.export';
         if(!view()->exists($view)){
             $view = 'mtm::crud_base.export';
         }
