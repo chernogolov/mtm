@@ -33,7 +33,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
         /** Check user permissions */
         $this->mtmUser = User::find(Auth::user()->id);
         View::share('mtmUser', $this->mtmUser);
-        if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('list '.Str::lower($this->modelName)))
+        if(!Auth::user()->hasRole('Super-Admin') && !Auth::user()->hasPermissionTo('list '.Str::lower($this->modelName)))
             abort(404);
 
         /** Get resource data from database */
@@ -115,7 +115,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
     public function create()
     {
         View::share('title', __('Create') . ' ' . $this->resource->name);
-        if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('create '.Str::lower($this->modelName)))
+        if(Auth::user()->hasRole('Super-Admin') && !Auth::user()->hasPermissionTo('create '.Str::lower($this->modelName)))
             abort(404);
 
         $fields = collect([]);
@@ -141,7 +141,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function store(Request $request)
     {
-        if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('create '.Str::lower($this->modelName)))
+        if(!Auth::user()->hasRole('Super-Admin') && !Auth::user()->hasPermissionTo('create '.Str::lower($this->modelName)))
             abort(404);
 
         $request->validate([
@@ -171,7 +171,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
     {
         View::share('title', __('Show') . ' ' . $this->resource->name);
 
-        if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('list '.Str::lower($this->modelName)))
+        if(!Auth::user()->hasRole('Super-Admin') && !Auth::user()->hasPermissionTo('list '.Str::lower($this->modelName)))
             abort(404);
 
         $data = $this->className::find($id);
@@ -179,7 +179,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
         if(!$data)
             abort(404);
 
-        $view = 'mtm::' . $this->resource['view_prefix'] . '.show';
+        $view = $this->resource['view_prefix'] . '.show';
         if(!view()->exists($view)){
             $view = 'mtm::crud_base.show';
         }
@@ -194,7 +194,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
     {
         View::share('title', __('Edit') . ' ' . $this->resource->name);
 
-        if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('edit '.Str::lower($this->modelName)))
+        if(!Auth::user()->hasRole('Super-Admin') && !Auth::user()->hasPermissionTo('edit '.Str::lower($this->modelName)))
             abort(404);
 
         $data = $this->className::find($id);
@@ -214,7 +214,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function update(Request $request, $id)
     {
-        if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('edit '.Str::lower($this->modelName)))
+        if(!Auth::user()->hasRole('Super-Admin') && !Auth::user()->hasPermissionTo('edit '.Str::lower($this->modelName)))
             abort(404);
 
         $request->validate([
@@ -258,7 +258,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function destroy($id)
     {
-        if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('delete '.Str::lower($this->modelName)))
+        if(!Auth::user()->hasRole('Super-Admin') && !Auth::user()->hasPermissionTo('delete '.Str::lower($this->modelName)))
             abort(404);
 
         $data = $this->className::find($id)->delete();
@@ -327,7 +327,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
      */
     public function cloning($id)
     {
-        if(!$this->mtmUser->hasRole('Super-Admin') && !$this->mtmUser->hasPermissionTo('edit '.Str::lower($this->modelName)))
+        if(!Auth::user()->hasRole('Super-Admin') && !Auth::user()->hasPermissionTo('edit '.Str::lower($this->modelName)))
             abort(404);
 
         $data = $this->className::find($id)->replicate()->save();
@@ -521,7 +521,8 @@ class CrudBaseController extends \App\Http\Controllers\Controller
     public function export(Request $request)
     {
         $data = $this->className::get();
-//        return view('mtm::crud_base.export', compact('data'));
+
+//        return view($this->resource['view_prefix'] . '.export', compact('data'));
         return Excel::download(new BaseExport($this->resource['view_prefix'], $this->resource, $data), strtolower(Str::plural($this->modelName)) . '-' . date('Y-m-d') . '.xlsx');
     }
 
