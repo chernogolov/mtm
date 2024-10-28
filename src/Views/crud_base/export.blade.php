@@ -1,3 +1,13 @@
+@php $orm_resources = [] @endphp
+@foreach($res->export_fields as $key)
+    @if($res->fields->$key->type == 'orm')
+        @php $ext = json_decode($res->fields->$key->ext) @endphp
+        @foreach($ext->fields as $field_name => $title)
+            @php $orm_resources[$key] = $field_name; @endphp
+        @endforeach
+    @endif
+@endforeach
+
 <table>
     <thead>
     <tr>
@@ -27,8 +37,9 @@
                             @endif
                         @endforeach
                     @elseif($res->fields->$key->type == 'orm')
-                        @if(isset($item->$key->id))
-                            {{$item->$key->id}}
+                        @php $k = $orm_resources[$key] @endphp
+                        @if(isset($orm_resources[$key]) && isset($item->$key->$k))
+                            {{$item->$key->$k}}
                         @else
                             @foreach($item->$key as $v)
                                 {{$v->id}}@if(!$loop->last), @endif
@@ -38,7 +49,7 @@
                         {{strval($item->$key)}}
                     @endif
                 </td>
-                @endforeach
+            @endforeach
         </tr>
         @php $count = $count + 1 @endphp
     @endforeach
