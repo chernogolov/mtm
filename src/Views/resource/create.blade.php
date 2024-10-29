@@ -90,8 +90,13 @@
                                         </div>
                                         <div class="mt-4">
                                             <x-input-label for="unique_fields" :value="__('Unique fields')" />
-                                            <x-text-input id="unique_fields" name="data[unique_fields]" form="data-form" type="text" class="mt-1 block w-full" :value="implode(',', $ff)" required autofocus autocomplete="unique_fields" />
+                                            <x-text-input id="unique_fields" name="data[unique_fields]" form="data-form" type="text" class="mt-1 block w-full" :value="implode(',', $ff)" autofocus autocomplete="unique_fields" />
                                             <x-input-error class="mt-2" :messages="$errors->get('data.unique_fields')" />
+                                        </div>
+                                        <div class="mt-4">
+                                            <x-input-label for="search_fields" :value="__('Search fields')" />
+                                            <x-text-input id="search_fields" name="data[search_fields]" form="data-form" type="text" class="mt-1 block w-full" :value="implode(',', $ff)" autofocus autocomplete="search_fields" />
+                                            <x-input-error class="mt-2" :messages="$errors->get('data.search_fields')" />
                                         </div>
                                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
