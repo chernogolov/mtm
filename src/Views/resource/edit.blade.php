@@ -131,8 +131,13 @@
                                         </div>
                                         <div class="mt-4">
                                             <x-input-label for="unique_fields" :value="__('Unique fields')" />
-                                            <x-text-input id="unique_fields" name="data[unique_fields]" form="data-form" type="text" class="mt-1 block w-full" :value="$resource->unique_fields" required autofocus autocomplete="unique_fields" />
+                                            <x-text-input id="unique_fields" name="data[unique_fields]" form="data-form" type="text" class="mt-1 block w-full" :value="$resource->unique_fields" autofocus autocomplete="unique_fields" />
                                             <x-input-error class="mt-2" :messages="$errors->get('data.unique_fields')" />
+                                        </div>
+                                        <div class="mt-4">
+                                            <x-input-label for="search_fields" :value="__('Search fields')" />
+                                            <x-text-input id="search_fields" name="data[search_fields]" form="data-form" type="text" class="mt-1 block w-full" :value="$resource->search_fields" autofocus autocomplete="search_fields" />
+                                            <x-input-error class="mt-2" :messages="$errors->get('data.search_fields')" />
                                         </div>
 
                                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -169,6 +174,7 @@
                                                     <td class="px-6 py-4">
                                                         <select id="{{$key}}_type" name="fields[{{$key}}][type]" form="data-form" type="text" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required autofocus autocomplete="{{$key}}_type" />
                                                         <option value="string" @if($field->type == 'string') selected @endif>{{__('String')}}</option>
+                                                        <option value="integer" @if($field->type == 'integer') selected @endif>{{__('Integer')}}</option>
                                                         <option value="link" @if($field->type == 'link') selected @endif>{{__('Link')}}</option>
                                                         <option value="textarea" @if($field->type == 'textarea') selected @endif>{{__('Text')}}</option>
                                                         <option value="text_editor" @if($field->type == 'text_editor') selected @endif>{{__('Editor')}}</option>
@@ -226,6 +232,7 @@
                                                     <td class="px-6 py-4">
                                                         <select id="{{$field}}_type" name="fields[{{$field}}][type]" form="data-form" type="text" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required autofocus autocomplete="{{$field}}_type" />
                                                         <option value="string">{{__('String')}}</option>
+                                                        <option value="integer">{{__('Integer')}}</option>
                                                         <option value="link">{{__('Link')}}</option>
                                                         <option value="textarea">{{__('Text')}}</option>
                                                         <option value="text_editor">{{__('Editor')}}</option>
