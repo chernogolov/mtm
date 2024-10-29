@@ -23,6 +23,23 @@
                                 </x-primary-button>
                             </a>
                         @endif
+                        @if(isset($res['search_fields']) && !empty($res['search_fields']))
+                            <form method="get" class="flex" action="{{ route($res['route_prefix'] . '.index') }}" id="search_form">
+                                @foreach($res['search_fields'] as $search_field)
+                                    <input placeholder="{{$res['fields']->$search_field->title}}" type="text" name="search[{{$search_field}}]" class="block w-full rounded-md mx-4 text-sm" form="search_form" @if(isset($_GET['search'][$search_field])) value="{{$_GET['search'][$search_field]}}" @endif/>
+                                @endforeach
+                                <x-primary-button class="text-sm" type="submit" form="search_form">
+                                    {{__('Search')}}
+                                </x-primary-button>
+                                <a href="{{ route($res['route_prefix'] . '.index') }}" title="{{__('Clear')}}">
+                                    <x-secondary-button class="text-sm ml-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                        </svg>
+                                    </x-secondary-button>
+                                </a>
+                            </form>
+                        @endif
                         <select title="Количество записей на странице" class="inline-flex items-center pl-4 pr-8 py-2 border  rounded-md font-semibold text-sm  tracking-widest  transition ease-in-out duration-150" id="onPage" onchange="if (this.value) window.location.href= '{{route($res['route_prefix'] . '.index')}}?on_pages=' + this.value">
                             <option value="10" @if($on_pages == 10) selected @endif>10</option>
                             <option value="20" @if($on_pages == 20) selected @endif>20</option>
