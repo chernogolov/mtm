@@ -47,6 +47,8 @@ class CrudBaseController extends \App\Http\Controllers\Controller
         $this->resource['catalog_fields'] = explode(',', $this->resource['catalog_fields']);
         $this->resource['view_fields'] = explode(',', $this->resource['view_fields']);
         $this->resource['export_fields'] = explode(',', $this->resource['export_fields']);
+        if(strlen($this->resource['search_fields'])>1)
+            $this->resource['search_fields'] = explode(',', $this->resource['search_fields']);
         $orm_fields = [];
         $fields = $this->resource->fields;
         foreach ($this->resource['catalog_fields'] as $f)
@@ -82,6 +84,18 @@ class CrudBaseController extends \App\Http\Controllers\Controller
 
         /** items on page from session */
         $this->get_items_on_page($request);
+
+        /** Search by field */
+        if(isset($request->search))
+        {
+            foreach ($request->search as $field => $phrase) {
+                if(strlen($phrase) > 1)
+                {
+                    $phrase = $this->prepareSearchPhrase($phrase);
+                    $itm->where($field, 'like', $phrase);
+                }
+            }
+        }
 
         /** Add related data in resource */
         if (count($this->resource['orm_fields']) > 0)
@@ -623,5 +637,11 @@ class CrudBaseController extends \App\Http\Controllers\Controller
         $this->on_pages = $request->session()->get('on_pages');
 
         View::share('on_pages', $this->on_pages);
+    }
+
+    public function prepareSearchPhrase($phrase)
+    {
+        $phrase = str_replace([' ', ','], '%', $phrase);
+        return '%' . $phrase . '%';
     }
 }
