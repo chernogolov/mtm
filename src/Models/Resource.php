@@ -10,7 +10,7 @@ class Resource extends Model
     use HasFactory;
 
     protected $fillable = [
-        'ordering', 'name', 'one_name', 'route_prefix', 'view_prefix', 'model_name', 'editable_fields', 'catalog_fields', 'fields', 'template', 'form_fields', 'api_fields','view_fields','export_fields','unique_fields'
+        'ordering', 'name', 'one_name', 'route_prefix', 'view_prefix', 'model_name', 'editable_fields', 'catalog_fields', 'fields', 'template', 'form_fields', 'api_fields','view_fields','export_fields','unique_fields','search_fields'
     ];
 
     public function getFieldsAttribute($value)
