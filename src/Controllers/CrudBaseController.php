@@ -15,6 +15,7 @@ use \PhpOffice\PhpWord\TemplateProcessor;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
 use Chernogolov\Mtm\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 
 use Illuminate\Support\Str;
 
@@ -92,10 +93,25 @@ class CrudBaseController extends \App\Http\Controllers\Controller
                 if(strlen($phrase) > 1)
                 {
                     $phrase = $this->prepareSearchPhrase($phrase);
-                    $itm->where($field, 'like', $phrase);
+
+                    /** Search by relation OR Search by string field */
+                    if($this->resource->fields->$field->type == 'orm')
+                    {
+                        $ext = json_decode($this->resource->fields->$field->ext);
+                        if(isset($ext->fields) && !empty($ext->fields))
+                        {
+                            $arr = array_keys((array)$ext->fields);
+                            $itm->whereHas($field, function (Builder $query) use($phrase, $arr) {
+                                $query->where($arr[0], 'like', $phrase);
+                            });
+                        }
+                    }
+                    else
+                        $itm->where($field, 'like', $phrase);
                 }
             }
         }
+
 
         /** Add related data in resource */
         if (count($this->resource['orm_fields']) > 0)
@@ -129,7 +145,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
     public function create()
     {
         View::share('title', __('Create') . ' ' . $this->resource->name);
-        if(!Auth::user()->hasRole('Super-Admin') && !Auth::user()->hasPermissionTo('create '.Str::lower($this->modelName)))
+        if(Auth::user()->hasRole('Super-Admin') && !Auth::user()->hasPermissionTo('create '.Str::lower($this->modelName)))
             abort(404);
 
         $fields = collect([]);
