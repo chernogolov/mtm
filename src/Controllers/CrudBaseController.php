@@ -145,7 +145,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
     public function create()
     {
         View::share('title', __('Create') . ' ' . $this->resource->name);
-        if($this->mtmUser->hasRole('Super-Admin') && !Auth::user()->hasPermissionTo('create '.Str::lower($this->modelName)))
+        if(!$this->mtmUser->hasRole('Super-Admin') && !Auth::user()->hasPermissionTo('create '.Str::lower($this->modelName)))
             abort(404);
 
         $fields = collect([]);
