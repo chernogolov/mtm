@@ -55,8 +55,8 @@ class BaseImport implements ToCollection, WithHeadingRow, WithCalculatedFormulas
         foreach ($this->result as $item)
         {
             $result = $m::updateOrCreate(
-                $item,
-                [$this->unique_fields => $item[$this->unique_fields]]
+                [$this->unique_fields => $item[$this->unique_fields]],
+                $item
             );
         }
     }
