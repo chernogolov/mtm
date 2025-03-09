@@ -27,7 +27,7 @@
                     @elseif($res->fields->$key->type == 'list')
                         @php $ext = json_decode($res->fields->$key->ext); $list = []; $v = $item->$key; @endphp
                         @if(isset($ext->list))
-                            {{$ext->list->$v}}
+                            {{$v}}
                         @endif
                     @elseif($res->fields->$key->type == 'gallery' || $res->fields->$key->type == 'files')
                         @foreach((array)json_decode($item->$key) as $i)
