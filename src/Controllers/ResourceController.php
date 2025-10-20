@@ -65,7 +65,7 @@ class ResourceController extends \App\Http\Controllers\Controller
             abort('404');
 
 
-        $fields = Schema::getColumnListing(Str::snake($post_data['name'], '_'));
+        $fields = Schema::getColumnListing(Str::plural(Str::snake($post_data['name'], '_')));
         return view('mtm::resource.create', ['fields' => $fields, 'name' => $post_data['name']]);
     }
 
