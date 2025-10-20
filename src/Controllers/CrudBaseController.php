@@ -21,8 +21,8 @@ use Illuminate\Support\Str;
 
 class CrudBaseController extends \App\Http\Controllers\Controller
 {
-    private $order_by = 'created_at';
-    private $order_by_direction = 'desc';
+    public $order_by = 'created_at';
+    public $order_by_direction = 'desc';
 
     public $resource = [];
     public $modelName;
