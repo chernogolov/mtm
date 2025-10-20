@@ -59,17 +59,13 @@ class ResourceController extends \App\Http\Controllers\Controller
         View::share('title', __('Create resource'));
         $fields = collect([]);
         $pd = [];
-//        foreach ($this->resource['editable_fields'] as $f)
-//        {
-//            if(isset($this->resource['fields'][$f]))
-//                $fields->put($f, $this->resource['fields'][$f]);
-//        }
 
         $post_data = $request->all();
         if(!isset($post_data['name']))
             abort('404');
 
-        $fields = Schema::getColumnListing(Str::plural(Str::lower($post_data['name'])));
+
+        $fields = Schema::getColumnListing(Str::snake($post_data['name'], '_'));
         return view('mtm::resource.create', ['fields' => $fields, 'name' => $post_data['name']]);
     }
 
