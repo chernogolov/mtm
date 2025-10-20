@@ -130,7 +130,7 @@ class CrudBaseController extends \App\Http\Controllers\Controller
         $on_pages = $request->session()->get('on_pages', 10);
         $items = $itm->paginate($on_pages);
 
-        $view = 'mtm::' . $this->resource['view_prefix'] . '.index';
+        $view = $this->resource['view_prefix'] . '.index';
         if(!view()->exists($view)){
             $view = 'mtm::crud_base.index';
         }
