@@ -22,7 +22,11 @@ class BaseController extends \App\Http\Controllers\Controller
     public function dashboard()
     {
         View::share('title', __('Dashboard'));
-        return view('mtm::dashboard');
+        $view = 'dashboard';
+        if(!view()->exists($view)){
+            $view = 'mtm::dashboard';
+        }
+        return view($view);
     }
 
     public function welcome()
